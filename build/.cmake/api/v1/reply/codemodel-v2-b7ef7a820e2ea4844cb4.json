@@ -6,6 +6,7 @@
 			[
 				{
 					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"projectIndex" : 0,
 					"source" : "."
 				}
@@ -27,12 +28,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "D:/Program_Projects/Course_Projects/OS/OS_FileSystem/build",
-		"source" : "D:/Program_Projects/Course_Projects/OS/OS_FileSystem"
+		"build" : "/home/z-wsl/codes/OS_Project/OS_FileSystem/build",
+		"source" : "/home/z-wsl/codes/OS_Project/OS_FileSystem"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 2
+		"minor" : 3
 	}
 }
