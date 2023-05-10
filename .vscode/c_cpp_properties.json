@@ -1,21 +1,16 @@
 {
     "configurations": [
         {
-            "name": "Win32",
+            "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/src/include/**",
-                "${workspaceFolder}/Learning/src/include/**"
+                "${workspaceFolder}/src/include",
+                "${workspaceFolder}/test/include"
             ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
-            ],
-            "compilerPath": "D:\\Softwares\\MinGW\\bin\\gcc.exe",
+            "defines": [],
+            "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
-            "cppStandard": "gnu++14",
-            "intelliSenseMode": "windows-gcc-x64",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            "cppStandard": "c++14",
+            "intelliSenseMode": "linux-clang-x64"
         }
     ],
     "version": 4
