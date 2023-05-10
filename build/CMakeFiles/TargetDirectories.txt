@@ -1,2 +1,0 @@
-/home/z-wsl/codes/OS_Project/OS_FileSystem/build/CMakeFiles/edit_cache.dir
-/home/z-wsl/codes/OS_Project/OS_FileSystem/build/CMakeFiles/rebuild_cache.dir

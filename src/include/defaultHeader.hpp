@@ -1,4 +1,0 @@
-#define __DEFAULTHEADER_HPP__
-#ifndef __DEFAULTHEADER_HPP__
-
-#endif // __DEFAULTHEADER_HPP__
