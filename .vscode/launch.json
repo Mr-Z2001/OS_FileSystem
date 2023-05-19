@@ -8,10 +8,10 @@
             "name": "run test",
             "type": "cppdbg",
             "request": "launch",
-            "program": "defaultClass.out",
+            "program": "defaultTest.out",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -28,5 +28,5 @@
                 }
             ]
         }
-    ]
+    ],
 }
