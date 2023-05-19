@@ -1,23 +1,17 @@
+# CMake minimum version required
 cmake_minimum_required(VERSION 3.10)
 
-project(FS
-  VERSION 1.0
-  DESCRIPTION "File System"
-  LANGUAGES C CXX
-)
+# Project name
+project(FILESYSTEM)
 
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Set C++ standard (optional)
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(src/include test/include)
+include_directories(
+  src/include/File
+  src/include/User
+  src/include/Directory
+  test/include)
 
 add_subdirectory(src)
 add_subdirectory(test)
-
-link_directories(src)
-
-add_executable(defaultTest test/defaultTest.cpp)
-
-target_link_libraries(defaultTest
-  PRIVATE
-  dc)
