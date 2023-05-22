@@ -2,6 +2,7 @@
 #define __USERMANAGER_HPP__
 
 #include "User.hpp"
+#include "UserGroup.hpp"
 #include <vector>
 
 class UserManager
@@ -9,6 +10,7 @@ class UserManager
 private:
   std::vector<User *> loggedUsers;
   std::vector<User *> users;
+  std::vector<UserGroup *> userGroups;
 
 public:
   UserManager();

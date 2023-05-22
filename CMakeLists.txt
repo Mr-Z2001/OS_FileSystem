@@ -11,6 +11,7 @@ include_directories(
   src/include/File
   src/include/User
   src/include/Directory
+  src/include/Disk
   utils
   test/include
 )
@@ -21,6 +22,7 @@ add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(utils)
 add_subdirectory(data)
+add_subdirectory(storage)
 
 # third party
 add_subdirectory(third_party/cryptopp-cmake)
