@@ -5,6 +5,8 @@ set(
   File/FileType.cpp
   File/FileAttribute.cpp
   File/FilePermission.cpp
+  File/File.cpp
+  File/FileManager.cpp
 )
 
 set(
@@ -14,25 +16,29 @@ set(
   include/File/FileType.hpp
   include/File/FileAttribute.hpp
   include/File/FilePermission.hpp
+  include/File/File.hpp
+  include/File/FileManager.hpp
 )
 
 set(
   USER_SOURCES
   User/User.cpp
+  User/UserManager.cpp
 )
 
 set(USER_HEADERS
   include/User/User.hpp
+  include/User/UserManager.hpp
 )
 
 set(
   DIRECTORY_SOURCES
-  Directory/DirectorySystem.cpp
+  Directory/Directory.cpp
 )
 
 set(
   DIRECTORY_HEADERS
-  include/Directory/DirectorySystem.hpp
+  include/Directory/Directory.hpp
 )
 
 add_library(user
@@ -47,3 +53,5 @@ add_library(directory
   ${DIRECTORY_SOURCES}
   ${DIRECTORY_HEADERS}
 )
+
+target_link_libraries(user PUBLIC cryptopp)

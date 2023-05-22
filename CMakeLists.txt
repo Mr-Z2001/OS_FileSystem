@@ -11,7 +11,16 @@ include_directories(
   src/include/File
   src/include/User
   src/include/Directory
-  test/include)
+  utils
+  test/include
+)
+
+configure_file(data/userdata.csv ${CMAKE_BINARY_DIR}/src/userdata.csv COPYONLY)
 
 add_subdirectory(src)
 add_subdirectory(test)
+add_subdirectory(utils)
+add_subdirectory(data)
+
+# third party
+add_subdirectory(third_party/cryptopp-cmake)

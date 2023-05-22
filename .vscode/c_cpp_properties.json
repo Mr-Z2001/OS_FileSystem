@@ -4,7 +4,9 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/src/include/**",
-                "${workspaceFolder}/test/include/**"
+                "${workspaceFolder}/test/include/**",
+                "${workspaceFolder}/utils/**",
+                "${workspaceFolder}/third_party/cryptopp/**",
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

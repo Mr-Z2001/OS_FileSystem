@@ -1,7 +1,7 @@
-set(
-  TEST_SOURCES
-  test.cpp
-)
 
-add_executable(test ${TEST_SOURCES})
-target_link_libraries(test PUBLIC fs)
+
+add_executable(main main.cpp)
+add_executable(test224 utils/test224.cpp)
+add_executable(testdata data/testdata.cpp)
+
+target_link_libraries(test224 PUBLIC UTILS)
