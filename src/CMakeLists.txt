@@ -55,6 +55,12 @@ set(DISK_HEADERS
   include/Disk/DiskConfiguration.hpp
 )
 
+set(SHELL_SOURCES
+  Shell/Shell.cpp)
+
+set(SHELL_HEADERS
+  include/Shell/Shell.hpp)
+
 add_library(user
   ${USER_SOURCES}
   ${USER_HEADERS})
@@ -71,6 +77,11 @@ add_library(directory
 add_library(disk
   ${DISK_SOURCES}
   ${DISK_HEADERS}
+)
+
+add_library(shell
+  ${SHELL_SOURCES}
+  ${SHELL_HEADERS}
 )
 
 target_link_libraries(user PUBLIC cryptopp)

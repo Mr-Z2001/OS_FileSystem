@@ -12,6 +12,7 @@ include_directories(
   src/include/User
   src/include/Directory
   src/include/Disk
+  src/include/Shell
   utils
   test/include
 )
