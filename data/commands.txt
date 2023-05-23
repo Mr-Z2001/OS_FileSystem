@@ -1,46 +1,112 @@
-create [option] <filename> 
+create <filename>
 open <filename>
+read <filename>
 cat [option]... <filename> ...
-  option:
-  -A, --show-all
-      equivalent to -vET
-
-  -b, --number-nonblank
-      number nonempty output lines, overrides -n
-
-  -e  equivalent to -vE
-
-  -E, --show-ends
-      display $ at end of each line
-
-  -n --numer
-      number all output lines
-
-  -s, --squeeze-blank
-      supperess repeated empty output lines
-
-  -t  equivalent to -vT
-
-  -T, --show-tabs
-      display TAB characters as ^T
-
-  -u  (ignored)
-
-  -v, --show-nonpriting
-      use ^ and M- notation, except for LFD and TAB
+options:
+	-h[n], --head[n]
+		output the first n lines, default 10 lines
+	-t[n], --tail[n]
+		output the last n lines, default 10 lines
+	-m, --more
+		output the file content page by page
+	-n, --number
+		number all output lines
 
 write [option] <filename> [text]
-
+options:
   -a, --append
       append text to the end of file
 
   -o  overwrite the text.
 
 close <filename>
-delete <filename>...
-mkdir 
-cd
-ls
+rm [option] <filename>...
+options:
+
+	-f, --force
+		ignore nonexistent files and arguments, never prompt
+
+	-i
+		prompt before every removal
+
+	-r, -R, --recursive
+		remove directories and their contents resursively
+	
+	-d, --dir
+		remove empty directories
+	
+	-v, --verbose
+		explain what is being done
+
+mkdir [option] <directory>...
+options:
+	-m, --mod=MODE
+		set file mode (as in chmod), not a=rwx - umask
+	
+	-p, --parents
+		no error if existing, make parent directories as needed
+	
+	-v, --verbos
+		print a message for each created directory
+
+cd <directory>
+pwd 
+ls [option] <directory>
+options:
+	-a, -all
+		do not ignore entries starting with .
+	
+	-A, --almost-all
+		do not list implied . and ..
+	
+	-author
+		with -l, print the author of each file
+	
+	-d, --directory
+		list directories themselves, no their contents.
+	
+	-h human readable
+	
+	-i, --inode
+		print the index number of each file
+	
+	-l use a long listing format 
+
+	-R, --recursive
+		list subdirectories recursively
+	
+	-S sort by file size, largest first
+
+	-t sort by time, newest first
+
 login
 logout
 format
+
+cp [option]... <source>... <target>
+options:
+	-f, --force
+		if  an existing destination file cannot be opened, remove it and try again (this option is ignored when the -n option is also used)
+	-l, --link
+		hard link files instead of copying
+	-n, --no-clobber
+		do not overwrite an existing file (overrides a previous -i option)
+	-u, --update
+		copy only when the SOURCE file is newer than the destination file or when the destination file is missing
+	-v, --verbose
+		explain what is being done
+	
+
+mv [option]... <source> <target>
+options:
+	-f, --force
+		no prompt before overwriting
+	-i, --interactive
+		prompt before overwriting
+	-n, --no-clobber
+		do not overwrite an existing file
+	-u, --update
+		only overwrite source is newer than target or target does not exist.
+	-v, --verbos
+		explain what is being done
+	
