@@ -1,27 +1,21 @@
-#ifndef __BLOCK_HPP__
-#define __BLOCK_HPP__
+#pragma once
 
-#include <array>
+#include "DiskDefs.hpp"
 
-#include "Sector.hpp"
+namespace Disk {
 
-class Block
-{
-private:
-  std::size_t size = BLOCK_SIZE; // 8KB
-  std::array<Sector *, SECTOR_PER_BLOCK> sectors;
+struct Block {
+  const blockid_t bid_;
+  const fd_t disk_;
 
-public:
-  Block();
+  Block(blockid_t bid, const char *path);
+  auto offset(void) const -> size_t;
+  auto blk_write(void *buf, size_t len) -> void;
+  auto blk_read(void *buf, size_t len) -> void;
+
   ~Block();
-
-  void write(int sectorIndex, std::string str);
-  std::string read(int sectorIndex, int sectorCount);
-  void clear();
-
-  std::size_t getSize();
-  std::size_t getSectorCount();
-  Sector *getSector(int index);
 };
 
-#endif
+using block_t = Block *;
+
+} // namespace Disk
