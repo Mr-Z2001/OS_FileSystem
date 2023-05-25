@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-void create(std::string filename, std::string username, int userPrivilege, std::string groupname, int groupPrivilege);
+void create(std::string filename, std::string username, int userPrivilege, std::string groupname, int groupPrivilege, std::string type);
 void rm(bool force, bool interactive, bool recursive, bool directory, bool verbose, std::vector<std::string> filenames);
 void open(std::string filename);
 void close(std::string filename);

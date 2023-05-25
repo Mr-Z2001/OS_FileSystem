@@ -58,8 +58,14 @@ void Shell::start()
     switch (cmdType)
     {
     case 0: // create
-      create(tokens[1], user->getUsername(), 111, userGroup->getName(), 111);
+    {
+      std::string type = "file";
+      for (auto i : tokens[1])
+        if (i == '/')
+          type = "dir";
+      create(tokens[1], user->getUsername(), 111, userGroup->getName(), 111, type);
       break;
+    }
     case 1: // open
       open(tokens[1]);
       break;
