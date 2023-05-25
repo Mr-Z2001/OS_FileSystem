@@ -4,8 +4,7 @@
 #include "File.hpp"
 #include "User.hpp"
 
-class FileManager
-{
+class FileManager {
 private:
   User *user;
   File *file;

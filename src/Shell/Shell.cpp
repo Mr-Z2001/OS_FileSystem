@@ -1,15 +1,14 @@
-#include <unistd.h>
-#include <stdlib.h>
 #include <fstream>
 #include <iostream>
+#include <stdlib.h>
+#include <unistd.h>
 
 #include "Shell.hpp"
 #include "ShellFunctions.hpp"
 #include "UserFunctions.hpp"
 #include "utils.hpp"
 
-Shell::Shell(char *username, char *hostname, char *cwd)
-{
+Shell::Shell(char *username, char *hostname, char *cwd) {
   this->username = username;
   this->hostname = hostname;
   this->cwd = cwd;
@@ -27,13 +26,11 @@ void Shell::setLineRead(char *line_read) { this->line_read = line_read; }
 
 void Shell::setPrompt(char *prompt) { this->prompt = prompt; }
 
-void Shell::loadCommandMap()
-{
+void Shell::loadCommandMap() {
   std::ifstream f;
   f.open("CommandToInt.csv");
   std::string line;
-  while (f >> line)
-  {
+  while (f >> line) {
     std::string command = line.substr(0, line.find(','));
     int cmdType = std::stoi(line.substr(line.find(',') + 1));
     this->commands[command] = cmdType;
@@ -41,22 +38,16 @@ void Shell::loadCommandMap()
   f.close();
 }
 
-int Shell::getCommandType(std::string command)
-{
-  return this->commands[command];
-}
+int Shell::getCommandType(std::string command) { return this->commands[command]; }
 
-void Shell::start()
-{
+void Shell::start() {
   loadCommandMap();
-  while (true)
-  {
+  while (true) {
     read_line();
     std::vector<std::string> tokens = parse(this->line_read);
     std::string command = tokens[0];
     int cmdType = getCommandType(command);
-    switch (cmdType)
-    {
+    switch (cmdType) {
     case 0: // create
     {
       std::string type = "file";
@@ -82,10 +73,8 @@ void Shell::start()
       int opt;
       bool h = false, t = false, m = false, n = false;
       char *arg;
-      while ((opt = getopt(argc, argv, optstring)) != -1)
-      {
-        switch (opt)
-        {
+      while ((opt = getopt(argc, argv, optstring)) != -1) {
+        switch (opt) {
         case 'h':
           h = true, arg = optarg;
           break;
@@ -112,8 +101,7 @@ void Shell::start()
         cat(userGroup->getName(), user->getUsername(), h, t, m, n, cstrToInt(arg), filenames);
       else
         std::cerr << "Invalid combination of options" << std::endl;
-    }
-    break;
+    } break;
     case 4: // write
 
       break;
@@ -129,10 +117,8 @@ void Shell::start()
       const char *optstring = "firRdv";
       int opt;
       bool f = false, i = false, r = false, d = false, v = false;
-      while ((opt = getopt(argc, argv, optstring)) != -1)
-      {
-        switch (opt)
-        {
+      while ((opt = getopt(argc, argv, optstring)) != -1) {
+        switch (opt) {
         case 'f':
           f = true;
           break;
@@ -158,8 +144,7 @@ void Shell::start()
       filenames.assign(tokens.begin() + optind, tokens.end());
       rm(userGroup->getName(), user->getUsername(), f, i, r, d, v, filenames);
       break;
-    }
-    break;
+    } break;
     case 7: // mkdir
     {
       int argc = tokens.size();
@@ -169,10 +154,8 @@ void Shell::start()
       const char *optstring = "mpv";
       int opt;
       bool p = false, v = false, m = false;
-      while ((opt = getopt(argc, argv, optstring)) != -1)
-      {
-        switch (opt)
-        {
+      while ((opt = getopt(argc, argv, optstring)) != -1) {
+        switch (opt) {
         case 'm':
           m = true;
         case 'p':
@@ -188,13 +171,12 @@ void Shell::start()
       }
       mkdir(userGroup->getName(), user->getUsername(), m, p, v, tokens[optind]);
       break;
-    }
-    break;
+    } break;
     case 8: // cd
       cd(userGroup->getName(), user->getUsername(), tokens[1]);
       break;
     case 9: // pwd
-      pwd();
+      pwd(cwd);
       break;
     case 10: // ls
     {
@@ -205,10 +187,8 @@ void Shell::start()
       const char *optstring = "aAdhilRrSt";
       int opt;
       bool a = false, A = false, d = false, h = false, i = false, l = false, R = false, S = false, t = false;
-      while ((opt = getopt(argc, argv, optstring)) != -1)
-      {
-        switch (opt)
-        {
+      while ((opt = getopt(argc, argv, optstring)) != -1) {
+        switch (opt) {
         case 'a':
           a = true;
           break;
@@ -254,10 +234,8 @@ void Shell::start()
       const char *optstring = "flnuv";
       int opt;
       bool f = false, l = false, n = false, u = false, v = false;
-      while ((opt = getopt(argc, argv, optstring)) != -1)
-      {
-        switch (opt)
-        {
+      while ((opt = getopt(argc, argv, optstring)) != -1) {
+        switch (opt) {
         case 'f':
           f = true;
           break;
@@ -292,10 +270,8 @@ void Shell::start()
       const char *optstring = "fiv";
       int opt;
       bool f = false, i = false, v = false;
-      while ((opt = getopt(argc, argv, optstring)) != -1)
-      {
-        switch (opt)
-        {
+      while ((opt = getopt(argc, argv, optstring)) != -1) {
+        switch (opt) {
         case 'f':
           f = true;
           break;
@@ -325,8 +301,7 @@ void Shell::start()
 
 void Shell::stop() { free(this->line_read); }
 
-void Shell::read_line()
-{
+void Shell::read_line() {
   this->line_read = readline(this->prompt);
   if (!this->line_read)
     exit(1);
@@ -334,8 +309,7 @@ void Shell::read_line()
     add_history(this->line_read);
 }
 
-void Shell::login()
-{
+void Shell::login() {
   std::string username;
   std::string password;
   std::string password_224;
@@ -347,17 +321,12 @@ void Shell::login()
   password_224 = calculateSHA224(password);
 
   bool state = userManager->login(username, password_224);
-  if (state)
-  {
+  if (state) {
     std::cout << "Welcome, " << username << '.' << std::endl;
     user = userManager->getUser(username);
     userGroup = userManager->getUserGroup(user);
-  }
-  else
+  } else
     std::cout << "Login failed." << std::endl;
 }
 
-void Shell::logout()
-{
-  userManager->logout(user->getUsername());
-}
+void Shell::logout() { userManager->logout(user->getUsername()); }

@@ -10,7 +10,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-
 namespace Disk {
 
 constexpr size_t Byte = sizeof(char);
@@ -38,8 +37,7 @@ using addr_t = intptr_t;
 using rwxinfo = uint64_t;
 using fd_t = int;
 
-template <typename T>
-using Vec = std::vector<T>;
+template <typename T> using Vec = std::vector<T>;
 
 template <typename T> using resp_t = std::pair<bool, T>;
 

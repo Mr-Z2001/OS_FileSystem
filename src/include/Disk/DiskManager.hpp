@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Block.hpp"
+#include "ChainInfo.hpp"
 #include "DiskDefs.hpp"
 #include "Frame.hpp"
-#include "ChainInfo.hpp"
 
 namespace Disk {
 

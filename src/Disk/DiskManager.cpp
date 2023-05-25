@@ -10,13 +10,9 @@ Disk::DiskManager::DiskManager(const char *path) : disk_(open(path, O_RDONLY)) {
   }
 }
 
-auto Disk::DiskManager::blk_alloc(size_t nm) -> Disk::Vec<Disk::blockid_t> {
-  return bcm->alloc(nm);
-}
+auto Disk::DiskManager::blk_alloc(size_t nm) -> Disk::Vec<Disk::blockid_t> { return bcm->alloc(nm); }
 
-auto Disk::DiskManager::blk_release(Disk::Vec<Disk::blockid_t> &bids) -> void {
-  bcm->release(bids);
-}
+auto Disk::DiskManager::blk_release(Disk::Vec<Disk::blockid_t> &bids) -> void { bcm->release(bids); }
 
 auto Disk::DiskManager::blk_write(blockid_t bid, void *buf, size_t len) -> void {
   assert(bid && bid < BLOK_NM);

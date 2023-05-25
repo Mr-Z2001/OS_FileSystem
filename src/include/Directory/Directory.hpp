@@ -1,12 +1,11 @@
 #ifndef __DIRECTORY_HPP__
 #define __DIRECTORY_HPP__
 
+#include "File.hpp"
 #include <string>
 #include <vector>
-#include "File.hpp"
 
-class Directory : public File
-{
+class Directory : public File {
 private:
   int directoryID;
   std::string name;

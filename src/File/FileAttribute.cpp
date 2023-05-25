@@ -1,7 +1,6 @@
 #include "FileAttribute.hpp"
 
-FileAttribute::FileAttribute()
-{
+FileAttribute::FileAttribute() {
   _permission = FilePermission();
   _password = "";
   _creator = nullptr;
@@ -14,8 +13,7 @@ FileAttribute::FileAttribute()
   _maxSize = 0;
 }
 
-FileAttribute::FileAttribute(const FileAttribute &other)
-{
+FileAttribute::FileAttribute(const FileAttribute &other) {
   _permission = other._permission;
   _password = other._password;
   _creator = other._creator;
@@ -28,8 +26,7 @@ FileAttribute::FileAttribute(const FileAttribute &other)
   _maxSize = other._maxSize;
 }
 
-FileAttribute::FileAttribute(FileAttribute &&other)
-{
+FileAttribute::FileAttribute(FileAttribute &&other) {
   _permission = other._permission;
   _password = other._password;
   _creator = other._creator;
@@ -42,8 +39,7 @@ FileAttribute::FileAttribute(FileAttribute &&other)
   _maxSize = other._maxSize;
 }
 
-FileAttribute &FileAttribute::operator=(const FileAttribute &other)
-{
+FileAttribute &FileAttribute::operator=(const FileAttribute &other) {
   _permission = other._permission;
   _password = other._password;
   _creator = other._creator;
@@ -57,8 +53,7 @@ FileAttribute &FileAttribute::operator=(const FileAttribute &other)
   return *this;
 }
 
-FileAttribute &FileAttribute::operator=(FileAttribute &&other)
-{
+FileAttribute &FileAttribute::operator=(FileAttribute &&other) {
   _permission = other._permission;
   _password = other._password;
   _creator = other._creator;
@@ -74,112 +69,52 @@ FileAttribute &FileAttribute::operator=(FileAttribute &&other)
 
 FileAttribute::~FileAttribute() {}
 
-FilePermission FileAttribute::getPermission() const
-{
-  return _permission;
-}
+FilePermission FileAttribute::getPermission() const { return _permission; }
 
-std::string FileAttribute::getPassword() const
-{
-  return _password;
-}
+std::string FileAttribute::getPassword() const { return _password; }
 
-User *FileAttribute::getCreator() const
-{
-  return _creator;
-}
+User *FileAttribute::getCreator() const { return _creator; }
 
-User *FileAttribute::getOwner() const
-{
-  return _owner;
-}
+User *FileAttribute::getOwner() const { return _owner; }
 
-uint8_t FileAttribute::getTag() const
-{
-  return _tag;
-}
+uint8_t FileAttribute::getTag() const { return _tag; }
 
-std::chrono::system_clock::time_point FileAttribute::getCreationTime() const
-{
-  return _creationTime;
-}
+std::chrono::system_clock::time_point FileAttribute::getCreationTime() const { return _creationTime; }
 
-std::chrono::system_clock::time_point FileAttribute::getLastAccessTime() const
-{
-  return _lastAccessTime;
-}
+std::chrono::system_clock::time_point FileAttribute::getLastAccessTime() const { return _lastAccessTime; }
 
-std::chrono::system_clock::time_point FileAttribute::getLastModifiedTime() const
-{
-  return _lastModifiedTime;
-}
+std::chrono::system_clock::time_point FileAttribute::getLastModifiedTime() const { return _lastModifiedTime; }
 
-size_t FileAttribute::getSize() const
-{
-  return _size;
-}
+size_t FileAttribute::getSize() const { return _size; }
 
-size_t FileAttribute::getMaxSize() const
-{
-  return _maxSize;
-}
+size_t FileAttribute::getMaxSize() const { return _maxSize; }
 
-void FileAttribute::setPermission(FilePermission permission)
-{
-  _permission = permission;
-}
+void FileAttribute::setPermission(FilePermission permission) { _permission = permission; }
 
-void FileAttribute::setPassword(std::string password)
-{
-  _password = password;
-}
+void FileAttribute::setPassword(std::string password) { _password = password; }
 
-void FileAttribute::setCreator(User *creator)
-{
-  _creator = creator;
-}
+void FileAttribute::setCreator(User *creator) { _creator = creator; }
 
-void FileAttribute::setOwner(User *owner)
-{
-  _owner = owner;
-}
+void FileAttribute::setOwner(User *owner) { _owner = owner; }
 
-void FileAttribute::setTag(uint8_t tag)
-{
-  _tag = tag;
-}
+void FileAttribute::setTag(uint8_t tag) { _tag = tag; }
 
-void FileAttribute::enableTag(TAG tag)
-{
-  _tag |= static_cast<uint8_t>(tag);
-}
+void FileAttribute::enableTag(TAG tag) { _tag |= static_cast<uint8_t>(tag); }
 
-void FileAttribute::disableTag(TAG tag)
-{
-  _tag &= ~static_cast<uint8_t>(tag);
-}
+void FileAttribute::disableTag(TAG tag) { _tag &= ~static_cast<uint8_t>(tag); }
 
-void FileAttribute::setCreationTime(std::chrono::system_clock::time_point creationTime)
-{
+void FileAttribute::setCreationTime(std::chrono::system_clock::time_point creationTime) {
   _creationTime = creationTime;
 }
 
-void FileAttribute::setLastAccessTime(std::chrono::system_clock::time_point lastAccessTime)
-{
+void FileAttribute::setLastAccessTime(std::chrono::system_clock::time_point lastAccessTime) {
   _lastAccessTime = lastAccessTime;
 }
 
-void FileAttribute::setLastModifiedTime(std::chrono::system_clock::time_point lastModifiedTime)
-{
+void FileAttribute::setLastModifiedTime(std::chrono::system_clock::time_point lastModifiedTime) {
   _lastModifiedTime = lastModifiedTime;
 }
 
-void FileAttribute::setSize(size_t size)
-{
-  _size = size;
-}
+void FileAttribute::setSize(size_t size) { _size = size; }
 
-void FileAttribute::setMaxSize(size_t maxSize)
-{
-  _maxSize = maxSize;
-}
+void FileAttribute::setMaxSize(size_t maxSize) { _maxSize = maxSize; }

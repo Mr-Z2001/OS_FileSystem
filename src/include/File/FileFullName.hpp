@@ -1,10 +1,9 @@
 #ifndef __FILEFULLNAME_HPP__
 #define __FILEFULLNAME_HPP__
-#include <string>
 #include <cassert>
+#include <string>
 
-class FileFullName
-{
+class FileFullName {
 private:
   std::string _fileNameWithoutExtension;
   std::string _fileExtension;

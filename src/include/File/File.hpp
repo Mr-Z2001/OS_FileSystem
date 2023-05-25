@@ -7,8 +7,7 @@
 #include "FilePermission.hpp"
 #include "FileType.hpp"
 
-class File
-{
+class File {
 private:
   FileAttribute *arrtribute;
   FileContext *context;

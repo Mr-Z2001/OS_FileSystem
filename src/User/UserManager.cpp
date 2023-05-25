@@ -1,28 +1,24 @@
 #include "UserManager.hpp"
-#include "cryptopp/sha.h"
+// #include "cryptopp/sha.h"
 #include "utils.hpp"
 #include <fstream>
 #include <regex>
 
-UserManager::UserManager()
-{
+UserManager::UserManager() {
   std::ifstream f;
   f.open("userdata.csv");
   std::string line;
-  while (std::getline(f, line))
-  {
+  while (std::getline(f, line)) {
     std::vector<std::string> data;
     std::regex pattern(",");
-    std::copy(std::sregex_token_iterator(line.begin(), line.end(), pattern, -1),
-              std::sregex_token_iterator(),
+    std::copy(std::sregex_token_iterator(line.begin(), line.end(), pattern, -1), std::sregex_token_iterator(),
               std::back_inserter(data));
     users.push_back(new User(data[0], data[1]));
   }
 }
 UserManager::~UserManager() {}
 
-bool UserManager::login(std::string username, std::string password)
-{
+bool UserManager::login(std::string username, std::string password) {
   for (int i = 0; i < loggedUsers.size(); i++)
     if (loggedUsers[i]->getUsername() == username)
       return false;
@@ -41,11 +37,9 @@ bool UserManager::login(std::string username, std::string password)
   return true;
 }
 
-bool UserManager::logout(std::string username)
-{
+bool UserManager::logout(std::string username) {
   for (int i = 0; i < loggedUsers.size(); i++)
-    if (loggedUsers[i]->getUsername() == username)
-    {
+    if (loggedUsers[i]->getUsername() == username) {
       loggedUsers.erase(loggedUsers.begin() + i);
       return true;
     }
@@ -53,8 +47,7 @@ bool UserManager::logout(std::string username)
   return false;
 }
 
-bool UserManager::registerUser(std::string username, std::string password)
-{
+bool UserManager::registerUser(std::string username, std::string password) {
   for (int i = 0; i < users.size(); i++)
     if (users[i]->getUsername() == username)
       return false;
@@ -70,8 +63,7 @@ bool UserManager::registerUser(std::string username, std::string password)
   return true;
 }
 
-bool UserManager::isLogged(std::string username)
-{
+bool UserManager::isLogged(std::string username) {
   for (int i = 0; i < loggedUsers.size(); i++)
     if (loggedUsers[i]->getUsername() == username)
       return true;
@@ -79,8 +71,7 @@ bool UserManager::isLogged(std::string username)
   return false;
 }
 
-User *UserManager::getUser(std::string username)
-{
+User *UserManager::getUser(std::string username) {
   for (int i = 0; i < users.size(); i++)
     if (users[i]->getUsername() == username)
       return users[i];
@@ -88,15 +79,10 @@ User *UserManager::getUser(std::string username)
   return nullptr;
 }
 
-std::vector<User *> UserManager::getLoggedUsers()
-{
-  return loggedUsers;
-}
+std::vector<User *> UserManager::getLoggedUsers() { return loggedUsers; }
 
-UserGroup *UserManager::getUserGroup(User *user)
-{
-  for (int i = 0; i < userGroups.size(); i++)
-  {
+UserGroup *UserManager::getUserGroup(User *user) {
+  for (int i = 0; i < userGroups.size(); i++) {
     auto group = userGroups[i];
     auto groupUsers = group->getUsers();
     for (auto i : groupUsers)

@@ -2,8 +2,7 @@
 #define __FILECONTEXT_HPP__
 #include <string>
 
-class FileContext
-{
+class FileContext {
 private:
   std::string _fileContext;
 

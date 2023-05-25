@@ -18,12 +18,9 @@ void UserGroup::setUsers(std::vector<User *> users) { this->users = users; }
 
 void UserGroup::addUser(User *user) { this->users.push_back(user); }
 
-void UserGroup::removeUser(User *user)
-{
-  for (int i = 0; i < this->users.size(); i++)
-  {
-    if (this->users[i]->getUsername() == user->getUsername())
-    {
+void UserGroup::removeUser(User *user) {
+  for (int i = 0; i < this->users.size(); i++) {
+    if (this->users[i]->getUsername() == user->getUsername()) {
       this->users.erase(this->users.begin() + i);
       break;
     }

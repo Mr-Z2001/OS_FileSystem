@@ -1,10 +1,10 @@
 #ifndef __SHELLFUNCTIONS_HPP__
 #define __SHELLFUNCTIONS_HPP__
 
-#include <vector>
-#include <string>
-#include <sstream>
 #include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 
 std::vector<std::string> parse(std::string line);
 

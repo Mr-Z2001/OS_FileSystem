@@ -1,18 +1,16 @@
 #ifndef __FILEATTRIBUTE_HPP__
 #define __FILEATTRIBUTE_HPP__
 
-#include <string>
+#include "FilePermission.hpp"
+#include "User.hpp"
 #include <chrono>
 #include <cinttypes>
-#include "User.hpp"
-#include "FilePermission.hpp"
+#include <string>
 
-class FileAttribute
-{
+class FileAttribute {
 public:
   // 8 bits - [LOCKED=128, TEMPORARY, RANDOMACCESS, BINARY, SAVE, SYSTEM, HIDDEN, READONLY=1]
-  enum class TAG
-  {
+  enum class TAG {
     READONLY = 1,
     HIDDEN = 2,
     SYSTEM = 4,

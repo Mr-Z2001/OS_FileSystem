@@ -1,5 +1,3 @@
-include_directories(include)
-
 aux_source_directory(File FILE_SOURCES)
 aux_source_directory(User USER_SOURCES)
 aux_source_directory(Directory DIRECTORY_SOURCES)

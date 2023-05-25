@@ -1,11 +1,10 @@
-#include <sstream>
-#include <unistd.h>
-#include <string>
 #include <iostream>
+#include <sstream>
+#include <string>
+#include <unistd.h>
 #include <vector>
 
-int main()
-{
+int main() {
   std::string line = "ls -lah /usr/local";
   std::istringstream iss(line);
 
@@ -22,10 +21,8 @@ int main()
   std::string arg;
 
   int opt;
-  while ((opt = getopt(argc, argv, optstring)) != -1)
-  {
-    switch (opt)
-    {
+  while ((opt = getopt(argc, argv, optstring)) != -1) {
+    switch (opt) {
     case 'l':
       std::cout << "option: l" << std::endl;
       break;

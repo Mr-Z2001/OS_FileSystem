@@ -1,15 +1,14 @@
 #ifndef __SHELL_HPP__
 #define __SHELL_HPP__
 
-#include <readline/readline.h>
-#include <readline/history.h>
 #include <map>
+#include <readline/history.h>
+#include <readline/readline.h>
 #include <string>
 
 #include "UserManager.hpp"
 
-class Shell
-{
+class Shell {
 private:
   char *line_read = (char *)NULL;
   // prompt=username@hostname:cwd$<space>

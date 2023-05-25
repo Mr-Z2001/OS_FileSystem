@@ -6,8 +6,7 @@
 
 #include "User.hpp"
 
-class UserGroup
-{
+class UserGroup {
 private:
   int id;
   std::string name;
