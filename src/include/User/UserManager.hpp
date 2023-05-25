@@ -22,6 +22,7 @@ public:
   bool isLogged(std::string username);
   User *getUser(std::string username);
   std::vector<User *> getLoggedUsers();
+  UserGroup *getUserGroup(User *user);
 };
 
 #endif

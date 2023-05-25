@@ -63,9 +63,6 @@ options:
 	-A, --almost-all
 		do not list implied . and ..
 	
-	-author
-		with -l, print the author of each file
-	
 	-d, --directory
 		list directories themselves, no their contents.
 	

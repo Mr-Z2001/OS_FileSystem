@@ -56,14 +56,21 @@ set(DISK_HEADERS
 )
 
 set(SHELL_SOURCES
-  Shell/Shell.cpp)
+  Shell/Shell.cpp
+  Shell/getopt.cpp
+  Shell/ShellFunctions.cpp
+)
 
 set(SHELL_HEADERS
-  include/Shell/Shell.hpp)
+  include/Shell/Shell.hpp
+  include/Shell/ShellFunctions.hpp
+  include/Shell/UserFunctions.hpp
+)
 
 add_library(user
   ${USER_SOURCES}
-  ${USER_HEADERS})
+  ${USER_HEADERS}
+)
 
 add_library(fs
   ${FILE_SOURCES}
@@ -85,3 +92,4 @@ add_library(shell
 )
 
 target_link_libraries(user PUBLIC cryptopp)
+target_link_libraries(shell PUBLIC cryptopp)

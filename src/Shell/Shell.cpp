@@ -6,6 +6,7 @@
 #include "Shell.hpp"
 #include "ShellFunctions.hpp"
 #include "UserFunctions.hpp"
+#include "utils.hpp"
 
 Shell::Shell(char *username, char *hostname, char *cwd)
 {
@@ -57,7 +58,7 @@ void Shell::start()
     switch (cmdType)
     {
     case 0: // create
-      create(tokens[1]);
+      create(tokens[1], user->getUsername(), 111, userGroup->getName(), 111);
       break;
     case 1: // open
       open(tokens[1]);
@@ -99,39 +100,215 @@ void Shell::start()
       // and = 0 && XOR = 1 (hmt)
       bool _and = h & t & m;
       bool _xor = h ^ t ^ m;
+      std::vector<std::string> filenames;
+      filenames.assign(tokens.begin() + optind, tokens.end());
       if (!_and && _xor)
-      {
-        if (h)
-          cat(true, false, false, arg, tokens);
-        else if (t)
-          cat(false, true, false, arg, tokens);
-        else if (m)
-          cat(false, false, true, false, tokens);
-      }
+        cat(h, t, m, n, cstrToInt(arg), filenames);
       else
-      {
         std::cerr << "Invalid combination of options" << std::endl;
-      }
     }
     break;
     case 4: // write
+
       break;
     case 5: // close
+      close(tokens[1]);
       break;
-    case 6: // close
+    case 6: // rm
+    {
+      int argc = tokens.size();
+      char *argv[argc];
+      for (int i = 0; i < argc; ++i)
+        argv[i] = const_cast<char *>(tokens[i].c_str());
+      const char *optstring = "firRdv";
+      int opt;
+      bool f = false, i = false, r = false, d = false, v = false;
+      while ((opt = getopt(argc, argv, optstring)) != -1)
+      {
+        switch (opt)
+        {
+        case 'f':
+          f = true;
+          break;
+        case 'i':
+          i = true;
+          break;
+        case 'r':
+        case 'R':
+          r = true;
+          break;
+        case 'd':
+          d = true;
+          break;
+        case 'v':
+          v = true;
+          break;
+        default:
+          std::cerr << "Unknown option" << std::endl;
+          break;
+        }
+      }
+      std::vector<std::string> filenames;
+      filenames.assign(tokens.begin() + optind, tokens.end());
+      rm(f, i, r, d, v, filenames);
       break;
+    }
+    break;
     case 7: // mkdir
+    {
+      int argc = tokens.size();
+      char *argv[argc];
+      for (int i = 0; i < argc; ++i)
+        argv[i] = const_cast<char *>(tokens[i].c_str());
+      const char *optstring = "mpv";
+      int opt;
+      bool p = false, v = false, m = false;
+      while ((opt = getopt(argc, argv, optstring)) != -1)
+      {
+        switch (opt)
+        {
+        case 'm':
+          m = true;
+        case 'p':
+          p = true;
+          break;
+        case 'v':
+          v = true;
+          break;
+        default:
+          std::cerr << "Unknown option" << std::endl;
+          break;
+        }
+      }
+      mkdir(m, p, v, tokens[optind]);
       break;
+    }
+    break;
     case 8: // cd
+      cd(tokens[1]);
       break;
     case 9: // pwd
+      pwd();
       break;
     case 10: // ls
+    {
+      int argc = tokens.size();
+      char *argv[argc];
+      for (int i = 0; i < argc; ++i)
+        argv[i] = const_cast<char *>(tokens[i].c_str());
+      const char *optstring = "aAdhilRrSt";
+      int opt;
+      bool a = false, A = false, d = false, h = false, i = false, l = false, R = false, S = false, t = false;
+      while ((opt = getopt(argc, argv, optstring)) != -1)
+      {
+        switch (opt)
+        {
+        case 'a':
+          a = true;
+          break;
+        case 'A':
+          A = true;
+          break;
+        case 'd':
+          d = true;
+          break;
+        case 'h':
+          h = true;
+          break;
+        case 'i':
+          i = true;
+          break;
+        case 'l':
+          l = true;
+          break;
+        case 'R':
+        case 'r':
+          R = true;
+          break;
+        case 'S':
+          S = true;
+          break;
+        case 't':
+          t = true;
+          break;
+        default:
+          std::cerr << "Unknown option" << std::endl;
+          break;
+        }
+      }
+      ls(a, A, d, h, i, l, R, S, t, tokens[optind]);
       break;
+    }
     case 11: // cp
+    {
+      int argc = tokens.size();
+      char *argv[argc];
+      for (int i = 0; i < argc; ++i)
+        argv[i] = const_cast<char *>(tokens[i].c_str());
+      const char *optstring = "flnuv";
+      int opt;
+      bool f = false, l = false, n = false, u = false, v = false;
+      while ((opt = getopt(argc, argv, optstring)) != -1)
+      {
+        switch (opt)
+        {
+        case 'f':
+          f = true;
+          break;
+        case 'l':
+          l = true;
+          break;
+        case 'n':
+          n = true;
+          break;
+        case 'u':
+          u = true;
+          break;
+        case 'v':
+          v = true;
+          break;
+        default:
+          std::cerr << "Unknown option" << std::endl;
+          break;
+        }
+      }
+      std::vector<std::string> filenames;
+      filenames.assign(tokens.begin() + optind, tokens.end() - 1);
+      cp(f, l, n, u, v, filenames, tokens.back());
       break;
+    }
     case 12: // mv
+    {
+      int argc = tokens.size();
+      char *argv[argc];
+      for (int i = 0; i < argc; ++i)
+        argv[i] = const_cast<char *>(tokens[i].c_str());
+      const char *optstring = "fiv";
+      int opt;
+      bool f = false, i = false, v = false;
+      while ((opt = getopt(argc, argv, optstring)) != -1)
+      {
+        switch (opt)
+        {
+        case 'f':
+          f = true;
+          break;
+        case 'i':
+          i = true;
+          break;
+        case 'v':
+          v = true;
+          break;
+        default:
+          std::cerr << "Unknown option" << std::endl;
+          break;
+        }
+      }
+      std::vector<std::string> filenames;
+      filenames.assign(tokens.begin() + optind, tokens.end() - 1);
+      mv(f, i, v, filenames, tokens.back());
       break;
+    }
     default: // unknown-command
       std::cerr << "Unknown command: " << command << std::endl;
       break;
@@ -149,4 +326,32 @@ void Shell::read_line()
     exit(1);
   if (this->line_read && *this->line_read)
     add_history(this->line_read);
+}
+
+void Shell::login()
+{
+  std::string username;
+  std::string password;
+  std::string password_224;
+
+  std::cout << "Username: ";
+  std::cin >> username;
+  password = getpass("Password: ");
+  fflush(stdin);
+  password_224 = calculateSHA224(password);
+
+  bool state = userManager->login(username, password_224);
+  if (state)
+  {
+    std::cout << "Welcome, " << username << '.' << std::endl;
+    user = userManager->getUser(username);
+    userGroup = userManager->getUserGroup(user);
+  }
+  else
+    std::cout << "Login failed." << std::endl;
+}
+
+void Shell::logout()
+{
+  userManager->logout(user->getUsername());
 }

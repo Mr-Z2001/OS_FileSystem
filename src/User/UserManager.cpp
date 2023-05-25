@@ -92,3 +92,16 @@ std::vector<User *> UserManager::getLoggedUsers()
 {
   return loggedUsers;
 }
+
+UserGroup *UserManager::getUserGroup(User *user)
+{
+  for (int i = 0; i < userGroups.size(); i++)
+  {
+    auto group = userGroups[i];
+    auto groupUsers = group->getUsers();
+    for (auto i : groupUsers)
+      if (i->getUsername() == user->getUsername())
+        return group;
+  }
+  return nullptr;
+}
