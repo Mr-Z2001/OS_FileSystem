@@ -1,0 +1,13 @@
+create,0
+open,1
+read,2
+cat,3
+write,4
+close,5
+rm,6
+mkdir,7
+cd,8
+pwd,9
+ls,10
+cp,11
+mv,12

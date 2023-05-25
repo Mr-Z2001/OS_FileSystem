@@ -1,7 +1,11 @@
 create <filename>
+	desc: create a file
 open <filename>
+	desc: open a file
 read <filename>
+	desc: read a file
 cat [option]... <filename> ...
+	desc: output contents of files
 options:
 	-h[n], --head[n]
 		output the first n lines, default 10 lines

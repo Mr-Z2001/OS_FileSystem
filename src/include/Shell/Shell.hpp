@@ -3,6 +3,8 @@
 
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <map>
+#include <string>
 
 class Shell
 {
@@ -14,6 +16,8 @@ private:
   char *username;
   char *hostname;
   char *cwd;
+
+  std::map<std::string, int> commands;
 
 public:
   explicit Shell(char *username, char *hostname, char *cwd);
@@ -28,7 +32,11 @@ public:
   void start();
   void stop();
 
-  void read();
+  void read_line();
+  void loadCommandMap();
+
+private:
+  int getCommandType(std::string command);
 };
 
 #endif
