@@ -1,0 +1,4 @@
+Language: Cpp
+# Force pointers to the type for C++.
+BasedOnStyle: LLVM
+ColumnLimit: 120

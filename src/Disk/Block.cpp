@@ -1,46 +1,32 @@
 #include "Block.hpp"
-#include <vector>
 
-Block::Block() {}
+using std::pair;
 
-Block::~Block() {}
-
-void Block::write(int sectorIndex, std::string str)
-{
-  std::vector<std::string> strings;
-  for (int i = 0; i < str.length(); i += SECTOR_SIZE)
-
-    strings.push_back(str.substr(i, SECTOR_SIZE));
-
-  for (int i = 0; i < strings.size(); i++)
-    sectors[sectorIndex + i]->write(0, strings[i]);
+Disk::Block::Block(blockid_t bid, const char *path) : bid_(bid), disk_(open(path, O_RDWR)) {
+    lseek(disk_, bid_ * PAGE_SIZ, SEEK_SET);
 }
 
-std::string Block::read(int sectorIndex, int sectorCount)
-{
-  std::string str;
-  for (int i = 0; i < sectorCount; i++)
-    str += sectors[sectorIndex + i]->read(0, SECTOR_SIZE);
-  return str;
+auto Disk::Block::offset() const -> size_t { return bid_ * PAGE_SIZ; }
+
+auto Disk::Block::blk_write(void *buf, size_t len) -> void {
+    assert(len == PAGE_SIZ);
+
+    lseek(disk_, bid_ * PAGE_SIZ, SEEK_SET);
+    lockf(disk_, F_LOCK, PAGE_SIZ);
+    write(disk_, buf, len);
+    sync_file_range(disk_, bid_ * PAGE_SIZ, PAGE_SIZ, SYNC_FILE_RANGE_WRITE_AND_WAIT);
+    lockf(disk_, F_ULOCK, PAGE_SIZ);
 }
 
-void Block::clear()
-{
-  for (int i = 0; i < SECTOR_PER_BLOCK; i++)
-    sectors[i]->clear();
+auto Disk::Block::blk_read(void *buf, size_t len) -> void {
+    assert(len == PAGE_SIZ);
+
+    lseek(disk_, bid_ * PAGE_SIZ, SEEK_SET);
+    lockf(disk_, F_LOCK, PAGE_SIZ);
+    read(disk_, buf, PAGE_SIZ);
+    lockf(disk_, F_ULOCK, PAGE_SIZ);
 }
 
-std::size_t Block::getSize()
-{
-  return size;
-}
-
-std::size_t Block::getSectorCount()
-{
-  return SECTOR_PER_BLOCK;
-}
-
-Sector *Block::getSector(int index)
-{
-  return sectors[index];
+Disk::Block::~Block() {
+    close(disk_);
 }
