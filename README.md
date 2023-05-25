@@ -18,6 +18,7 @@ cmake --version
 sudo apt install build-essential
 sudo apt install cmake
 sudo apt install libreadline-dev
+sudo pat install libssl-dev
 ```
 
 # How to build
