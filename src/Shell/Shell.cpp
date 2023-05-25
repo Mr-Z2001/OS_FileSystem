@@ -67,10 +67,10 @@ void Shell::start()
       break;
     }
     case 1: // open
-      open(tokens[1]);
+      open(userGroup->getName(), user->getUsername(), tokens[1]);
       break;
     case 2: // read
-      read(tokens[1]);
+      read(userGroup->getName(), user->getUsername(), tokens[1]);
       break;
     case 3: // cat
     {
@@ -109,7 +109,7 @@ void Shell::start()
       std::vector<std::string> filenames;
       filenames.assign(tokens.begin() + optind, tokens.end());
       if (!_and && _xor)
-        cat(h, t, m, n, cstrToInt(arg), filenames);
+        cat(userGroup->getName(), user->getUsername(), h, t, m, n, cstrToInt(arg), filenames);
       else
         std::cerr << "Invalid combination of options" << std::endl;
     }
@@ -118,7 +118,7 @@ void Shell::start()
 
       break;
     case 5: // close
-      close(tokens[1]);
+      close(userGroup->getName(), user->getUsername(), tokens[1]);
       break;
     case 6: // rm
     {
@@ -156,7 +156,7 @@ void Shell::start()
       }
       std::vector<std::string> filenames;
       filenames.assign(tokens.begin() + optind, tokens.end());
-      rm(f, i, r, d, v, filenames);
+      rm(userGroup->getName(), user->getUsername(), f, i, r, d, v, filenames);
       break;
     }
     break;
@@ -186,12 +186,12 @@ void Shell::start()
           break;
         }
       }
-      mkdir(m, p, v, tokens[optind]);
+      mkdir(userGroup->getName(), user->getUsername(), m, p, v, tokens[optind]);
       break;
     }
     break;
     case 8: // cd
-      cd(tokens[1]);
+      cd(userGroup->getName(), user->getUsername(), tokens[1]);
       break;
     case 9: // pwd
       pwd();
@@ -242,7 +242,7 @@ void Shell::start()
           break;
         }
       }
-      ls(a, A, d, h, i, l, R, S, t, tokens[optind]);
+      ls(userGroup->getName(), user->getUsername(), a, A, d, h, i, l, R, S, t, tokens[optind]);
       break;
     }
     case 11: // cp
@@ -280,7 +280,7 @@ void Shell::start()
       }
       std::vector<std::string> filenames;
       filenames.assign(tokens.begin() + optind, tokens.end() - 1);
-      cp(f, l, n, u, v, filenames, tokens.back());
+      cp(userGroup->getName(), user->getUsername(), f, l, n, u, v, filenames, tokens.back());
       break;
     }
     case 12: // mv
@@ -312,7 +312,7 @@ void Shell::start()
       }
       std::vector<std::string> filenames;
       filenames.assign(tokens.begin() + optind, tokens.end() - 1);
-      mv(f, i, v, filenames, tokens.back());
+      mv(userGroup->getName(), user->getUsername(), f, i, v, filenames, tokens.back());
       break;
     }
     default: // unknown-command

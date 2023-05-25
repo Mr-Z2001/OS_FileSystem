@@ -59,6 +59,7 @@ set(SHELL_SOURCES
   Shell/Shell.cpp
   Shell/getopt.cpp
   Shell/ShellFunctions.cpp
+  Shell/UserFunctions.cpp
 )
 
 set(SHELL_HEADERS
