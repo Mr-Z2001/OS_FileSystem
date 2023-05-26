@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 include_directories(include)
 include_directories(include/Disk)
 include_directories(include/File)
@@ -7,7 +5,6 @@ include_directories(include/Shell)
 include_directories(include/User)
 include_directories(include/Directory)
 
->>>>>>> 6f46577 ([Modified] add page ops)
 aux_source_directory(File FILE_SOURCES)
 aux_source_directory(User USER_SOURCES)
 aux_source_directory(Directory DIRECTORY_SOURCES)

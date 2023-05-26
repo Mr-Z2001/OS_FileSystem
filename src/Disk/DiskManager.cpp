@@ -130,10 +130,6 @@ auto Disk::DiskManager::pg_write(pageid_t pgid, void *buf, size_t len) -> void {
     }
   }
 
-  if (len == 0) {
-    return;
-  }
-
   auto extralen = len + pg->offset_ - PAGE_SIZ * vblen;
 
   auto bids = blk_alloc(extralen / PAGE_SIZ + !!(extralen % PAGE_SIZ));
