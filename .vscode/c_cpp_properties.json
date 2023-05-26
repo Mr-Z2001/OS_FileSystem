@@ -5,8 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/src/include/**",
                 "${workspaceFolder}/test/include/**",
-                "${workspaceFolder}/utils/**",
-                "${workspaceFolder}/third_party/cryptopp/**",
+                "${workspaceFolder}/utils/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

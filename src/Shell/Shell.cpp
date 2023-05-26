@@ -42,6 +42,9 @@ int Shell::getCommandType(std::string command) { return this->commands[command];
 
 void Shell::start() {
   loadCommandMap();
+  Identity id;
+  id.groupname = userGroup->getName();
+  id.username = user->getUsername();
   while (true) {
     read_line();
     std::vector<std::string> tokens = parse(this->line_read);
@@ -54,14 +57,14 @@ void Shell::start() {
       for (auto i : tokens[1])
         if (i == '/')
           type = "dir";
-      create(tokens[1], user->getUsername(), 111, userGroup->getName(), 111, type);
+      create(id, tokens[1], type);
       break;
     }
     case 1: // open
-      open(userGroup->getName(), user->getUsername(), tokens[1]);
+      open(id, tokens[1]);
       break;
     case 2: // read
-      read(userGroup->getName(), user->getUsername(), tokens[1]);
+      read(id, tokens[1]);
       break;
     case 3: // cat
     {
@@ -98,7 +101,7 @@ void Shell::start() {
       std::vector<std::string> filenames;
       filenames.assign(tokens.begin() + optind, tokens.end());
       if (!_and && _xor)
-        cat(userGroup->getName(), user->getUsername(), h, t, m, n, cstrToInt(arg), filenames);
+        cat(id, h, t, m, n, cstrToInt(arg), filenames);
       else
         std::cerr << "Invalid combination of options" << std::endl;
     } break;
@@ -106,7 +109,7 @@ void Shell::start() {
 
       break;
     case 5: // close
-      close(userGroup->getName(), user->getUsername(), tokens[1]);
+      close(id, tokens[1]);
       break;
     case 6: // rm
     {
@@ -142,7 +145,7 @@ void Shell::start() {
       }
       std::vector<std::string> filenames;
       filenames.assign(tokens.begin() + optind, tokens.end());
-      rm(userGroup->getName(), user->getUsername(), f, i, r, d, v, filenames);
+      rm(id, f, i, r, d, v, filenames);
       break;
     } break;
     case 7: // mkdir
@@ -169,11 +172,11 @@ void Shell::start() {
           break;
         }
       }
-      mkdir(userGroup->getName(), user->getUsername(), m, p, v, tokens[optind]);
+      mkdir(id, m, p, v, tokens[optind]);
       break;
     } break;
     case 8: // cd
-      cd(userGroup->getName(), user->getUsername(), tokens[1]);
+      cd(id, tokens[1]);
       break;
     case 9: // pwd
       pwd(cwd);
@@ -222,7 +225,7 @@ void Shell::start() {
           break;
         }
       }
-      ls(userGroup->getName(), user->getUsername(), a, A, d, h, i, l, R, S, t, tokens[optind]);
+      ls(id, a, A, d, h, i, l, R, S, t, tokens[optind]);
       break;
     }
     case 11: // cp
@@ -258,7 +261,7 @@ void Shell::start() {
       }
       std::vector<std::string> filenames;
       filenames.assign(tokens.begin() + optind, tokens.end() - 1);
-      cp(userGroup->getName(), user->getUsername(), f, l, n, u, v, filenames, tokens.back());
+      cp(id, f, l, n, u, v, filenames, tokens.back());
       break;
     }
     case 12: // mv
@@ -288,7 +291,7 @@ void Shell::start() {
       }
       std::vector<std::string> filenames;
       filenames.assign(tokens.begin() + optind, tokens.end() - 1);
-      mv(userGroup->getName(), user->getUsername(), f, i, v, filenames, tokens.back());
+      mv(id, f, i, v, filenames, tokens.back());
       break;
     }
     default: // unknown-command

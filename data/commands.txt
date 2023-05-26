@@ -111,3 +111,18 @@ options:
 	-v, --verbos
 		explain what is being done
 	
+chmod [option] <mode> <file>...
+options:
+	-R, --recursive
+		change files and directories recursively
+	
+	mode:(int)
+		000: no permission
+		001: execute
+		010: write
+		011: write and execute
+		100: read
+		101: read and execute
+		110: read and write
+		111: read, write and execute
+	
