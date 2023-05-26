@@ -42,9 +42,9 @@ int Shell::getCommandType(std::string command) { return this->commands[command];
 
 void Shell::start() {
   loadCommandMap();
-  Identity id;
-  id.groupname = userGroup->getName();
-  id.username = user->getUsername();
+  Identity *id;
+  id->groupname = userGroup->getName();
+  id->username = user->getUsername();
   while (true) {
     read_line();
     std::vector<std::string> tokens = parse(this->line_read);
@@ -154,13 +154,15 @@ void Shell::start() {
       char *argv[argc];
       for (int i = 0; i < argc; ++i)
         argv[i] = const_cast<char *>(tokens[i].c_str());
-      const char *optstring = "mpv";
+      const char *optstring = "m::pv";
+      char *arg;
       int opt;
       bool p = false, v = false, m = false;
       while ((opt = getopt(argc, argv, optstring)) != -1) {
         switch (opt) {
         case 'm':
           m = true;
+          arg = optarg;
         case 'p':
           p = true;
           break;
@@ -172,11 +174,11 @@ void Shell::start() {
           break;
         }
       }
-      mkdir(id, m, p, v, tokens[optind]);
+      mkdir(id, m, cstrToInt(optarg), p, v, tokens[optind]);
       break;
     } break;
     case 8: // cd
-      cd(id, tokens[1]);
+      cd(id, tokens[1], cwd);
       break;
     case 9: // pwd
       pwd(cwd);
