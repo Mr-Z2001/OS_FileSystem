@@ -27,6 +27,6 @@ void mv(Identity identity, bool force, bool interactive, bool verbose, std::vect
         std::string destination);
 void cp(Identity identity, bool force, bool link, bool noclobber, bool update, bool verbose,
         std::vector<std::string> source, std::string destination);
-bool chmod(Identity identity, bool recursive, int mode, std::vector<std::string> filename);
+void chmod(Identity identity, bool recursive, int mode, std::vector<std::string> filename);
 
 #endif
