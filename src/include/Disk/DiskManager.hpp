@@ -14,15 +14,15 @@ namespace Disk {
 class DiskManager {
   fd_t disk_;
   
-  BlockChainManager *bcm;
+  BlockChainManager *bcm_;
 
-  block_t blks[BLOK_NM];
+  block_t blks_[BLOK_NM];
 
-  frame_t frms[FRME_NM];
-  record_t rcds[FRME_NM];
+  frame_t frms_[FRME_NM];
+  record_t rcds_[FRME_NM];
 
-  std::unordered_map<pageid_t, page_t> pagemap;
-  std::unordered_map<blockid_t, frameid_t> hashmap;
+  std::unordered_map<pageid_t, page_t> pagemap_;
+  std::unordered_map<blockid_t, frameid_t> hashmap_;
 
   auto frm_alloc(blockid_t bid) -> frameid_t;
   auto frm_release(frameid_t fid) -> void;
@@ -31,6 +31,7 @@ class DiskManager {
 
 public:
   DiskManager(const char *path);
+  DiskManager(const char *path, BlockChainManager *bcm);
   ~DiskManager();
 
   auto blk_alloc(size_t nm) -> Vec<blockid_t>;
