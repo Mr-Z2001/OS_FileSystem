@@ -16,7 +16,11 @@ Shell::Shell(char *username, char *hostname, char *cwd) {
   sprintf(this->prompt, "%s@%s:%s$ ", this->username, this->hostname, this->cwd);
 }
 
-Shell::~Shell() { free(this->prompt); }
+Shell::~Shell() {
+  delete user;
+  delete userGroup;
+  // free(this->prompt);
+}
 
 char *Shell::getLineRead() { return this->line_read; }
 
@@ -25,6 +29,12 @@ char *Shell::getPrompt() { return this->prompt; }
 void Shell::setLineRead(char *line_read) { this->line_read = line_read; }
 
 void Shell::setPrompt(char *prompt) { this->prompt = prompt; }
+
+UserManager *Shell::getUserManager() {
+  if (Shell::userManager == nullptr)
+    Shell::userManager = new UserManager();
+  return Shell::userManager;
+}
 
 void Shell::loadCommandMap() {
   std::ifstream f;
@@ -45,7 +55,8 @@ void Shell::start() {
   Identity *id;
   id->groupname = userGroup->getName();
   id->username = user->getUsername();
-  while (true) {
+  bool end_flag = false;
+  while (!end_flag) {
     read_line();
     std::vector<std::string> tokens = parse(this->line_read);
     std::string command = tokens[0];
@@ -178,6 +189,8 @@ void Shell::start() {
       break;
     } break;
     case 8: // cd
+      if (tokens.size() == 1)
+        tokens.push_back("");
       cd(id, tokens[1], cwd);
       break;
     case 9: // pwd
@@ -296,6 +309,12 @@ void Shell::start() {
       mv(id, f, i, v, filenames, tokens.back());
       break;
     }
+    case 13: // exit
+    {
+      std::cout << "Bye!" << std::endl;
+      end_flag = true;
+      break;
+    }
     default: // unknown-command
       std::cerr << "Unknown command: " << command << std::endl;
       break;
@@ -335,3 +354,5 @@ void Shell::login() {
 }
 
 void Shell::logout() { userManager->logout(user->getUsername()); }
+
+User *Shell::getUser() { return user; }

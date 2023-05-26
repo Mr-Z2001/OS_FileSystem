@@ -17,9 +17,9 @@ private:
   char *hostname;
   char *cwd;
 
-  static UserManager *userManager;
   User *user;
   UserGroup *userGroup;
+  static UserManager *userManager;
 
   std::map<std::string, int> commands;
 
@@ -41,6 +41,10 @@ public:
 
   void login();
   void logout();
+
+  User *getUser();
+
+  static UserManager *getUserManager();
 
 private:
   int getCommandType(std::string command);

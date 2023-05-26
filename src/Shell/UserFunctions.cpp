@@ -112,6 +112,9 @@ void mkdir(Identity *id, bool m, int mode, bool parents, bool verbose, std::stri
 void cd(Identity *id, std::string directory, char *newDirectory) {
   std::string gn = id->groupname;
   std::string un = id->username;
+  if (directory == "" || directory == "~") {
+    // cd to (/home/username);
+  }
   int fd = find(directory);
   if (fd == -1) {
     std::cout << "File not found" << std::endl;
