@@ -62,7 +62,8 @@
     "stop_token": "cpp",
     "streambuf": "cpp",
     "thread": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "cassert": "cpp"
   },
   "lldb.displayFormat": "auto",
   "lldb.showDisassembly": "auto",

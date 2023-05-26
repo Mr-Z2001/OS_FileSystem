@@ -12,6 +12,8 @@
 
 namespace Disk {
 
+constexpr size_t KthLRU = 7;
+
 constexpr size_t Byte = sizeof(char);
 constexpr size_t KiB = 1024 * Byte;
 constexpr size_t MiB = 1024 * KiB;
@@ -46,5 +48,20 @@ enum privilege {
   REN = 0b010,
   XEN = 0b100,
 };
+
+class DiskManager;
+using diskmgr_t = DiskManager *;
+
+struct Frame;
+using frame_t = Frame *;
+
+struct Record;
+using record_t = Record *;
+
+struct Page;
+using page_t = Page *;
+
+struct Block;
+using block_t = Block *;
 
 } // namespace Disk

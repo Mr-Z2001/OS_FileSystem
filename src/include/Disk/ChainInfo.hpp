@@ -2,8 +2,6 @@
 
 #include "DiskDefs.hpp"
 
-extern int __builtin_popcountll(long long int);
-
 namespace Disk {
 
 static_assert(sizeof(size_t) == 8);
