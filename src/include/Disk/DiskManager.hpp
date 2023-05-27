@@ -31,7 +31,7 @@ class DiskManager {
 
 public:
   DiskManager(const char *path);
-  DiskManager(const char *path, BlockChainManager *bcm);
+  DiskManager(const char *path, Vec<blockid_t> &usedblks);
   ~DiskManager();
 
   auto blk_alloc(size_t nm) -> Vec<blockid_t>;

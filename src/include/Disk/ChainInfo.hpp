@@ -30,6 +30,7 @@ class BlockChainManager {
 
 public:
   BlockChainManager();
+  auto mark(blockid_t bid) -> void;
   auto alloc(size_t nm) -> Vec<blockid_t>;
   auto release(Vec<blockid_t> &blks) -> void;
 };

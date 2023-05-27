@@ -2,11 +2,10 @@
 
 #include "DiskManager.hpp"
 
-static bool bcm_self_alloc = false;
+static bool bcm_self_alloc = true;
 
 Disk::DiskManager::DiskManager(const char *path) : disk_(open(path, O_RDONLY)) {
   bcm_ = new BlockChainManager();
-  bcm_self_alloc = true;
 
   for (size_t i = 0; i < BLOK_NM; ++i) {
     blks_[i] = new Block(i, path);
@@ -20,7 +19,12 @@ Disk::DiskManager::DiskManager(const char *path) : disk_(open(path, O_RDONLY)) {
   }
 }
 
-Disk::DiskManager::DiskManager(const char *path, BlockChainManager *bcm) : disk_(open(path, O_RDONLY)), bcm_(bcm) {
+Disk::DiskManager::DiskManager(const char *path, Vec<blockid_t> &usedblks) : disk_(open(path, O_RDONLY)) {
+  bcm_ = new BlockChainManager();
+  for (auto &&bid: usedblks) {
+    bcm_->mark(bid);
+  }
+
   for (size_t i = 0; i < BLOK_NM; ++i) {
     blks_[i] = new Block(i, path);
   }
