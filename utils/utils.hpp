@@ -10,5 +10,6 @@
 #include <openssl/sha.h>
 
 std::string calculateSHA224(const std::string &str);
+auto strToInt(std::string) -> int;
 
 #endif

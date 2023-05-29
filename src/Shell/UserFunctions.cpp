@@ -91,7 +91,7 @@ void write(Indentity id, bool append, bool overwrite, std::string filename, std:
     overwrite_to_file(fd, text);
 }
 
-void mkdir(Identity *id, bool m, int mode, bool parents, bool verbose, std::string directory) {
+void mkdir(Identity *id, bool m, int usermode, int groupmode, bool parents, bool verbose, std::string directory) {
   std::string gn = id->groupname;
   std::string un = id->username;
   if (parents) {

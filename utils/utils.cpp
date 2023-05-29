@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include <cstdint>
 #include <iomanip>
 #include <sstream>
 
@@ -13,4 +14,11 @@ std::string calculateSHA224(const std::string &str) {
   }
 
   return ss.str();
+}
+
+auto strToInt(std::string str) -> int {
+  int x = 0;
+  for (auto c : str)
+    x = (x << 3) + (x << 1) + c - '0';
+  return x;
 }
