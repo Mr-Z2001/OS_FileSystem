@@ -12,5 +12,4 @@ public:
     std::string username;
 };
 
-
 #endif //FILESYSTEM_IDENTITY_H

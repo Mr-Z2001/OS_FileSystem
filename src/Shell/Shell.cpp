@@ -9,16 +9,19 @@
 #include "utils.hpp"
 
 Shell::Shell(char *username, char *hostname, char *cwd) {
+  init_ufs();
   this->username = username;
   this->hostname = hostname;
   this->cwd = cwd;
   this->prompt = (char *)malloc(1024);
+  this->userManager = new UserManager;
   sprintf(this->prompt, "%s@%s:%s$ ", this->username, this->hostname, this->cwd);
 }
 
 Shell::~Shell() {
   delete user;
   delete userGroup;
+  delete userManager;
   // free(this->prompt);
 }
 
@@ -64,11 +67,7 @@ void Shell::start() {
     switch (cmdType) {
     case 0: // create
     {
-      std::string type = "file";
-      for (auto i : tokens[1])
-        if (i == '/')
-          type = "dir";
-      create(id, tokens[1], type);
+      create(id, tokens[1]);
       break;
     }
     case 1: // open
@@ -166,14 +165,15 @@ void Shell::start() {
       for (int i = 0; i < argc; ++i)
         argv[i] = const_cast<char *>(tokens[i].c_str());
       const char *optstring = "m::pv";
-      char *arg;
+      char *arg1, *arg2;
       int opt;
       bool p = false, v = false, m = false;
       while ((opt = getopt(argc, argv, optstring)) != -1) {
         switch (opt) {
         case 'm':
           m = true;
-          arg = optarg;
+          arg1 = optarg;
+          arg2 = optarg;
         case 'p':
           p = true;
           break;
@@ -185,7 +185,7 @@ void Shell::start() {
           break;
         }
       }
-      mkdir(id, m, cstrToInt(optarg), p, v, tokens[optind]);
+      mkdir(id, m, cstrToInt(arg1), cstrToInt(arg2), p, v, tokens[optind]);
       break;
     } break;
     case 8: // cd
@@ -340,9 +340,12 @@ void Shell::login() {
 
   std::cout << "Username: ";
   std::cin >> username;
+  std::cin.ignore();
   password = getpass("Password: ");
   fflush(stdin);
+  std::cerr << password << std::endl;
   password_224 = calculateSHA224(password);
+  std::cerr << password_224 << std::endl;
 
   bool state = userManager->login(username, password_224);
   if (state) {

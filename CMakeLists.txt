@@ -5,9 +5,11 @@ cmake_minimum_required(VERSION 3.10)
 project(FILESYSTEM)
 
 # Set C++ standard (optional)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_C_STANDARD 99)
 
 include_directories(
+  src/include
   src/include/File
   src/include/User
   src/include/Directory
@@ -18,7 +20,8 @@ include_directories(
   test/include
 )
 
-configure_file(data/userdata.csv ${CMAKE_BINARY_DIR}/src/userdata.csv COPYONLY)
+configure_file(data/userdata.csv ${CMAKE_BINARY_DIR}/test/userdata.csv COPYONLY)
+configure_file(data/CommandToInt.csv ${CMAKE_BINARY_DIR}/test/CommandToInt.csv COPYONLY)
 
 add_subdirectory(src)
 add_subdirectory(test)

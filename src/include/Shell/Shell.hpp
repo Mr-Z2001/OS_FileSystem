@@ -7,6 +7,7 @@
 #include <string>
 
 #include "UserManager.hpp"
+#include "FileTree.h"
 
 class Shell {
 private:

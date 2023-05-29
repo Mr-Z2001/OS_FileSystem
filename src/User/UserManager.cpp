@@ -2,11 +2,14 @@
 // #include "cryptopp/sha.h"
 #include "utils.hpp"
 #include <fstream>
+#include <iostream>
 #include <regex>
+#include <cassert>
 
 UserManager::UserManager() {
   std::ifstream f;
   f.open("userdata.csv");
+  assert(f);
   std::string line;
   while (std::getline(f, line)) {
     std::vector<std::string> data;
@@ -15,6 +18,8 @@ UserManager::UserManager() {
               std::back_inserter(data));
     users.push_back(new User(data[0], data[1]));
   }
+  f.close();
+
 }
 UserManager::~UserManager() {}
 

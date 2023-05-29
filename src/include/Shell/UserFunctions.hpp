@@ -3,15 +3,11 @@
 
 #include <string>
 #include <vector>
+#include "Identity.h"
 
-class Identity {
-public:
-  std::string groupname;
-  std::string username;
-};
+void init_ufs();
 
-void create(Identity *identity, std::string filename,
-            std::string type); // deleted previleges, due to all those are 111.
+void create(Identity *identity, std::string filename); // deleted previleges, due to all those are 111.
 void rm(Identity *identity, bool force, bool interactive, bool recursive, bool directory, bool verbose,
         std::vector<std::string> filenames);
 void open(Identity *identity, std::string filename);
