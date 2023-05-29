@@ -62,3 +62,8 @@ auto Disk::BlockChainManager::release(Disk::Vec<Disk::blockid_t> &blks) -> void 
     }
   }
 }
+
+auto Disk::BlockChainManager::mark(blockid_t bid) -> void {
+  const size_t mask = 0x1;
+  bc_[bid / 64].status = bc_[bid / 64].status | (mask << (bid % 64));
+}

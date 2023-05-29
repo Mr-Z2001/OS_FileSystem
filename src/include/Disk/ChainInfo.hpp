@@ -2,8 +2,6 @@
 
 #include "DiskDefs.hpp"
 
-extern int __builtin_popcountll(long long int);
-
 namespace Disk {
 
 static_assert(sizeof(size_t) == 8);
@@ -32,6 +30,7 @@ class BlockChainManager {
 
 public:
   BlockChainManager();
+  auto mark(blockid_t bid) -> void;
   auto alloc(size_t nm) -> Vec<blockid_t>;
   auto release(Vec<blockid_t> &blks) -> void;
 };
