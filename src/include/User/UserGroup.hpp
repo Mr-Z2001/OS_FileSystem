@@ -10,7 +10,7 @@ class UserGroup {
 private:
   int id;
   std::string name;
-  std::vector<User *> users;
+  std::vector<int> users;
 
 public:
   UserGroup();
@@ -19,14 +19,14 @@ public:
 
   int getId();
   std::string getName();
-  std::vector<User *> getUsers();
+  std::vector<int> getUsers();
 
   void setId(int id);
   void setName(std::string name);
-  void setUsers(std::vector<User *> users);
+  void setUsers(std::vector<int > users);
 
-  void addUser(User *user);
-  void removeUser(User *user);
+  void addUser(int user);
+  void removeUser(int user);
 };
 
 #endif

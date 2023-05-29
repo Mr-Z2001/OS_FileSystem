@@ -21,6 +21,7 @@ include_directories(
 )
 
 configure_file(data/userdata.csv ${CMAKE_BINARY_DIR}/test/userdata.csv COPYONLY)
+configure_file(data/userGroupData.csv ${CMAKE_BINARY_DIR}/test/userGroupData.csv COPYONLY)
 configure_file(data/CommandToInt.csv ${CMAKE_BINARY_DIR}/test/CommandToInt.csv COPYONLY)
 
 add_subdirectory(src)

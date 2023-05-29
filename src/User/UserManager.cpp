@@ -1,27 +1,48 @@
 #include "UserManager.hpp"
 // #include "cryptopp/sha.h"
 #include "utils.hpp"
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <regex>
-#include <cassert>
 
 UserManager::UserManager() {
   std::ifstream f;
   f.open("userdata.csv");
-  assert(f);
+  assert(f.is_open());
   std::string line;
   while (std::getline(f, line)) {
     std::vector<std::string> data;
     std::regex pattern(",");
     std::copy(std::sregex_token_iterator(line.begin(), line.end(), pattern, -1), std::sregex_token_iterator(),
               std::back_inserter(data));
-    users.push_back(new User(data[0], data[1]));
+    users.push_back(new User(std::stod(data[0]), data[1], data[2]));
   }
   f.close();
-
+  f.open("userGroupData.csv");
+  assert(f.is_open());
+  while (std::getline(f, line)) {
+    std::vector<std::string> data;
+    std::regex pattern(",");
+    std::copy(std::sregex_token_iterator(line.begin(), line.end(), pattern, -1), std::sregex_token_iterator(),
+              std::back_inserter(data));
+    UserGroup *ug;
+    ug->setId(std::stod(data[0]));
+    ug->setName(data[1]);
+    for (int i = 2; i < data.size(); i++) {
+      int u = std::stod(data[i]);
+      ug->addUser(u);
+    }
+    userGroups.push_back(ug);
+  }
+  f.close();
 }
-UserManager::~UserManager() {}
+UserManager::~UserManager() {
+  for (int i = 0; i < users.size(); ++i)
+    delete users[i];
+  for (int i = 0; i < userGroups.size(); ++i)
+    delete userGroups[i];
+}
 
 bool UserManager::login(std::string username, std::string password) {
   for (int i = 0; i < loggedUsers.size(); i++)
@@ -58,7 +79,7 @@ bool UserManager::registerUser(std::string username, std::string password) {
       return false;
 
   std::string hash = calculateSHA224(password);
-  users.push_back(new User(username, hash));
+  users.push_back(new User(users.size(), username, hash));
 
   std::ofstream f;
   f.open("userdata.csv", std::ios::app);
@@ -91,7 +112,7 @@ UserGroup *UserManager::getUserGroup(User *user) {
     auto group = userGroups[i];
     auto groupUsers = group->getUsers();
     for (auto i : groupUsers)
-      if (i->getUsername() == user->getUsername())
+      if (i == user->getID())
         return group;
   }
   return nullptr;
