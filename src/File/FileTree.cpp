@@ -4,6 +4,7 @@
 
 #include "FileTree.h"
 #include "DiskDefs.hpp"
+#include "funcs.hpp"
 #include <string.h>
 
 FileTree::FileTree() {
@@ -20,17 +21,18 @@ void FileTree::addChild(int parent, Node *child_p) {
 }
 void FileTree::init() {
 
-  Node *root = new Node("/", "directory");
-  project.insert({0, root});
-  tree.push_back({});
+  //   Node *root = new Node("/", "directory");
+  //   project.insert({0, root});
+  //   tree.push_back({});
 
-  Node *bin = new Node("bin", "directory");
-  Node *user = new Node("user", "directory");
-  Node *home = new Node("home", "directory");
-  addChild(0, bin);
-  addChild(0, user);
-  addChild(0, home);
+  //   Node *bin = new Node("bin", "directory");
+  //   Node *user = new Node("user", "directory");
+  //   Node *home = new Node("home", "directory");
+  //   addChild(0, bin);
+  //   addChild(0, user);
+  //   addChild(0, home);
 
+  load(&tree, &project);
   current_directory = 0;
 }
 int FileTree::get_current_directory() { return current_directory; }
@@ -497,3 +499,35 @@ void FileTree::print() {
     std::cout << std::endl;
   }
 }
+std::string FileTree::full_name(std::string input) {
+  if (input.size() > 3 && input.substr(0, 3) == "../") // 回上一级
+  {
+    input = input.substr(3);
+  }
+  if (input.size() > 2 && input.substr(0, 2) == "./") {
+    input = input.substr(2);
+  }
+  auto temp = current_directory;
+  std::string res = "";
+  auto words = split(input);
+  auto first_file = words[0];
+  Node *node;
+  for (auto i : project) {
+    if (i.second->name == first_file) {
+      node = i.second;
+      break;
+    }
+  }
+
+  std::vector<std::string> files;
+  while (node->name != "/") {
+    res = '/' + node->name + res;
+    node = project.find(node->parent)->second;
+  }
+  for (int i = 1; i < words.size(); ++i) {
+    res += '/' + words[i];
+  }
+  return res;
+}
+
+void FileTree::set_index() { this->index = this->tree.size() - 1; }
