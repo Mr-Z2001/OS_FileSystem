@@ -221,6 +221,8 @@ void Shell::start() {
     case 8: // cd
       if (tokens.size() == 1)
         tokens.push_back("");
+      if (tokens[1] == "~" || tokens[1] == "")
+        tokens[1] = "/home/" + id->username;
       cd(id, tokens[1], cwd);
       break;
     case 9: // pwd
