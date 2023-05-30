@@ -23,7 +23,7 @@ public:
 
   void setId(int id);
   void setName(std::string name);
-  void setUsers(std::vector<int > users);
+  void setUsers(std::vector<int> users);
 
   void addUser(int user);
   void removeUser(int user);

@@ -6,8 +6,8 @@
 #include <readline/readline.h>
 #include <string>
 
-#include "UserManager.hpp"
 #include "FileTree.h"
+#include "UserManager.hpp"
 
 class Shell {
 private:
