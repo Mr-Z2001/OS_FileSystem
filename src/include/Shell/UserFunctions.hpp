@@ -1,9 +1,9 @@
 #ifndef __USERFUNCTIONS_HPP__
 #define __USERFUNCTIONS_HPP__
 
+#include "Identity.h"
 #include <string>
 #include <vector>
-#include "Identity.h"
 
 void init_ufs();
 

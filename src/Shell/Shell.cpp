@@ -112,9 +112,10 @@ void Shell::start() {
       // and = 0 && XOR = 1 (hmt)
       bool _and = h & t & m;
       bool _xor = h ^ t ^ m;
+      bool none = !h & !t & !m;
       std::vector<std::string> filenames;
       filenames.assign(tokens.begin() + optind, tokens.end());
-      if (!_and && _xor)
+      if (!_and && _xor || none)
         cat(id, h, t, m, n, cstrToInt(arg), filenames);
       else
         std::cerr << "Invalid combination of options" << std::endl;
@@ -366,24 +367,25 @@ void Shell::read_line() {
 }
 
 void Shell::login() {
-  std::string username;
-  std::string password;
-  std::string password_224;
+  std::string _username;
+  std::string _password;
+  std::string _password_224;
 
   std::cout << "Username: ";
 
   // std::cin >> username;
   // std::cin.ignore();
   // password = getpass("Password: ");
-  username = "admin";
-  password = "password";
-  password_224 = calculateSHA224(password);
+  _username = "admin";
+  _password = "password";
+  _password_224 = calculateSHA224(_password);
 
-  bool state = userManager->login(username, password_224);
+  bool state = userManager->login(_username, _password_224);
   if (state) {
-    std::cout << "Welcome, " << username << '.' << std::endl;
-    user = userManager->getUser(username);
+    std::cout << "Welcome, " << _username << '.' << std::endl;
+    user = userManager->getUser(_username);
     userGroup = userManager->getUserGroup(user);
+    strcpy(this->username, _username.c_str());
   } else {
     std::cout << "Login failed." << std::endl;
     assert(0);
