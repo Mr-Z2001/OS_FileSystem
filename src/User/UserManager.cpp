@@ -62,7 +62,7 @@ UserManager::~UserManager() {
 bool UserManager::login(std::string username, std::string hashed_password) {
 
   int id = getUserIDByName(username);
-  if (~id)
+  if (id == -1)
     return false;
 
   for (int i = 0; i < loggedUsers.size(); ++i)
@@ -81,7 +81,7 @@ bool UserManager::login(std::string username, std::string hashed_password) {
 bool UserManager::logout(std::string username) {
 
   int id = getUserIDByName(username);
-  if (~id)
+  if (id == -1)
     return false;
 
   for (int i = 0; i < loggedUsers.size(); i++)
@@ -96,7 +96,7 @@ bool UserManager::logout(std::string username) {
 bool UserManager::registerUser(std::string username, std::string raw_password) {
 
   int id = getUserIDByName(username);
-  if (~id)
+  if (id == -1)
     return false;
 
   for (int i = 0; i < users.size(); i++)
@@ -119,7 +119,7 @@ bool UserManager::registerUser(std::string username, std::string raw_password) {
 bool UserManager::isLogged(std::string username) {
 
   int id = getUserIDByName(username);
-  if (~id)
+  if (id == -1)
     return false;
 
   for (int i = 0; i < loggedUsers.size(); i++)
@@ -132,7 +132,7 @@ bool UserManager::isLogged(std::string username) {
 User *UserManager::getUser(std::string username) {
 
   int id = getUserIDByName(username);
-  if (~id)
+  if (id == -1)
     return nullptr;
 
   for (int i = 0; i < users.size(); i++)
@@ -151,7 +151,7 @@ std::vector<User *> UserManager::getLoggedUsers() {
 
 UserGroup *UserManager::getUserGroup(User *user) {
   int id = user->getID();
-  if (~id)
+  if (id == -1)
     return nullptr;
 
   for (auto it = userGroupMap.begin(); it != userGroupMap.end(); ++it) {
