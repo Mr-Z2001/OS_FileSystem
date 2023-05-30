@@ -21,6 +21,7 @@ void UserManager::loadUserMap() {
     u->setUsername(data[1]);
     u->setPassword(data[2]);
     userMap.insert(std::pair<int, User *>(u->getID(), u));
+    users.push_back(u->getID());
     usercnt++;
   }
   f.close();
@@ -44,6 +45,7 @@ void UserManager::loadUserGroupMap() {
       ug->addUser(u);
     }
     userGroupMap.insert(std::pair<int, UserGroup *>(ug->getId(), ug));
+    userGroups.push_back(ug->getId());
   }
   f.close();
 }
