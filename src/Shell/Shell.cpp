@@ -120,8 +120,34 @@ void Shell::start() {
         std::cerr << "Invalid combination of options" << std::endl;
     } break;
     case 4: // write
-
+    {
+      int argc = tokens.size();
+      char *argv[argc];
+      for (int i = 0; i < argc; ++i)
+        argv[i] = const_cast<char *>(tokens[i].c_str());
+      const char *optstring = "ao";
+      int opt;
+      bool a = false, o = false;
+      while ((opt = getopt(argc, argv, optstring)) != -1) {
+        switch (opt) {
+        case 'a':
+          a = true;
+          break;
+        case 'o':
+          o = true;
+          break;
+        default:
+          std::cerr << "Unknown option" << std::endl;
+          break;
+        }
+      }
+      std::string filename;
+      std::string text;
+      filename = tokens[optind];
+      text = tokens[optind + 1];
+      write(id, a, o, filename, text);
       break;
+    }
     case 5: // close
       close(id, tokens[1]);
       break;
@@ -191,7 +217,7 @@ void Shell::start() {
       }
       mkdir(id, m, cstrToInt(arg1), cstrToInt(arg2), p, v, tokens[optind]);
       break;
-    } break;
+    }
     case 8: // cd
       if (tokens.size() == 1)
         tokens.push_back("");

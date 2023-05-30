@@ -88,7 +88,7 @@ void cat(Identity *id, bool head, bool tail, bool more, bool number, int n, std:
   // }
 }
 
-void write(Identity *id, bool append, bool overwrite, std::string filename, std::string text) {
+void write(Identity *id, bool append, bool overwrite, std::string filename, std::string &text) {
   ft->write(id, append, overwrite, filename, text);
   // std::string gn = id->groupname;
   // std::string un = id->username;
