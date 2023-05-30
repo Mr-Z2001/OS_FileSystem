@@ -10,6 +10,7 @@ static FileTree *ft = nullptr;
 
 void init_ufs() {
   ft = new FileTree;
+  ft->init();
 }
 
 
@@ -131,7 +132,7 @@ void mkdir(Identity *id, bool m, int usermode, int groupmode, bool parents, bool
 }
 
 void cd(Identity *id, std::string directory, char *newDirectory) {
-  ft->cd(directory);
+  ft->cd(directory, newDirectory);
   // std::string gn = id->groupname;
   // std::string un = id->username;
   // if (directory == "" || directory == "~") {

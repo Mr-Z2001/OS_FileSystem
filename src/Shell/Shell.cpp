@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <unistd.h>
+#include <cassert>
 
 #include "Shell.hpp"
 #include "ShellFunctions.hpp"
@@ -12,7 +13,7 @@ Shell::Shell(char *username, char *hostname, char *cwd) {
   init_ufs();
   this->username = username;
   this->hostname = hostname;
-  this->cwd = cwd;
+  strncpy(this->cwd, cwd, 128);
   this->prompt = (char *)malloc(1024);
   this->userManager = new UserManager;
   sprintf(this->prompt, "%s@%s:%s$ ", this->username, this->hostname, this->cwd);
@@ -55,7 +56,7 @@ int Shell::getCommandType(std::string command) { return this->commands[command];
 
 void Shell::start() {
   loadCommandMap();
-  Identity *id;
+  Identity id[1];
   id->groupname = userGroup->getName();
   id->username = user->getUsername();
   bool end_flag = false;
@@ -338,22 +339,25 @@ void Shell::login() {
   std::string password;
   std::string password_224;
 
+  
   std::cout << "Username: ";
-  std::cin >> username;
-  std::cin.ignore();
-  password = getpass("Password: ");
-  fflush(stdin);
-  std::cerr << password << std::endl;
+  
+  // std::cin >> username;
+  // std::cin.ignore();
+  // password = getpass("Password: ");
+  username = "admin";
+  password = "password";
   password_224 = calculateSHA224(password);
-  std::cerr << password_224 << std::endl;
 
   bool state = userManager->login(username, password_224);
   if (state) {
     std::cout << "Welcome, " << username << '.' << std::endl;
     user = userManager->getUser(username);
     userGroup = userManager->getUserGroup(user);
-  } else
+  } else {
     std::cout << "Login failed." << std::endl;
+    assert(0);
+  }
 }
 
 void Shell::logout() { userManager->logout(user->getUsername()); }

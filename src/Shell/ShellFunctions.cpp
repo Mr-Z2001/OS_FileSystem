@@ -6,6 +6,7 @@ std::vector<std::string> parse(std::string line) {
   std::istringstream iss(line);
   while (iss >> token)
     tokens.push_back(token);
+  tokens.push_back("");
   return tokens;
 }
 

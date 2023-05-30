@@ -8,6 +8,7 @@
 #include <map>
 #include "Node.h"
 #include "Identity.h"
+#include "Disk/DiskManager.hpp"
 class FileTree {
 
 private:
@@ -22,6 +23,8 @@ private:
     void delete_file(Node* file);                 //删除文件
     void delete_directory(int directory);       //删除目录
     void tostring(int file,std::string& path);
+
+    Disk::DiskManager *dmgr;
 public:
 
     FileTree();
@@ -41,7 +44,7 @@ public:
     void chmod(Identity *id, bool recursive, int user_mode, int group_mode,std::vector<std::string> filename);
     void ls();
 
-    void cd(std::string filename);//
+    void cd(std::string filename, char *newdir);//
     void print();
 
 

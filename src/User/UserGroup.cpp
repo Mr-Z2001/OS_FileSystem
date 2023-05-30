@@ -10,7 +10,7 @@ std::string UserGroup::getName() { return this->name; }
 
 std::vector<int> UserGroup::getUsers() { return this->users; }
 
-void UserGroup::setId(int id) { this->id = id; }
+void UserGroup::setId(int _id) { this->id = _id; }
 
 void UserGroup::setName(std::string name) { this->name = name; }
 

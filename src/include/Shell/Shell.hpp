@@ -16,7 +16,7 @@ private:
   char *prompt = (char *)NULL;
   char *username;
   char *hostname;
-  char *cwd;
+  char cwd[128];
 
   User *user;
   UserGroup *userGroup;
