@@ -13,15 +13,10 @@ void init_ufs() {
   ft->init();
 }
 
-
 // file type must be a file, not a directory
-void create(Identity *id, std::string filename) {
-  ft->create(id, filename);
-}
+void create(Identity *id, std::string filename) { ft->create(id, filename); }
 
-void pwd(std::string cwd) {
-  ft->cwd(cwd);
-}
+void pwd(std::string cwd) { ft->cwd(cwd); }
 
 void rm(Identity *id, bool force, bool interactive, bool recursive, bool directory, bool verbose,
         std::vector<std::string> filenames) {
@@ -108,9 +103,7 @@ void write(Identity *id, bool append, bool overwrite, std::string filename, std:
   //   overwrite_to_file(fd, text);
 }
 
-void read(Identity *identity, std::string filename) {
-  
-}
+void read(Identity *identity, std::string filename) {}
 
 void mkdir(Identity *id, bool m, int usermode, int groupmode, bool parents, bool verbose, std::string directory) {
   ft->mkdir(id, m, usermode, groupmode, parents, verbose, directory);

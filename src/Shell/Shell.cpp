@@ -89,7 +89,7 @@ void Shell::start() {
       const char *optstring = "h::t::mn";
       int opt;
       bool h = false, t = false, m = false, n = false;
-      char *arg;
+      char *arg = NULL;
       while ((opt = getopt(argc, argv, optstring)) != -1) {
         switch (opt) {
         case 'h':
@@ -169,7 +169,7 @@ void Shell::start() {
       for (int i = 0; i < argc; ++i)
         argv[i] = const_cast<char *>(tokens[i].c_str());
       const char *optstring = "m::pv";
-      char *arg1, *arg2;
+      char *arg1 = NULL, *arg2 = NULL;
       int opt;
       bool p = false, v = false, m = false;
       while ((opt = getopt(argc, argv, optstring)) != -1) {
