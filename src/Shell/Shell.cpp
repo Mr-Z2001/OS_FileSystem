@@ -1,8 +1,8 @@
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <stdlib.h>
 #include <unistd.h>
-#include <cassert>
 
 #include "Shell.hpp"
 #include "ShellFunctions.hpp"
@@ -28,7 +28,10 @@ Shell::~Shell() {
 
 char *Shell::getLineRead() { return this->line_read; }
 
-char *Shell::getPrompt() { return this->prompt; }
+char *Shell::getPrompt() {
+  sprintf(this->prompt, "%s@%s:%s$ ", this->username, this->hostname, this->cwd);
+  return this->prompt;
+}
 
 void Shell::setLineRead(char *line_read) { this->line_read = line_read; }
 
@@ -327,7 +330,7 @@ void Shell::start() {
 void Shell::stop() { free(this->line_read); }
 
 void Shell::read_line() {
-  this->line_read = readline(this->prompt);
+  this->line_read = readline(getPrompt());
   if (!this->line_read)
     exit(1);
   if (this->line_read && *this->line_read)
@@ -339,9 +342,8 @@ void Shell::login() {
   std::string password;
   std::string password_224;
 
-  
   std::cout << "Username: ";
-  
+
   // std::cin >> username;
   // std::cin.ignore();
   // password = getpass("Password: ");
