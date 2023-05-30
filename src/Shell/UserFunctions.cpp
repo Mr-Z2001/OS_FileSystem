@@ -1,5 +1,6 @@
 #include "UserFunctions.hpp"
 #include "FileTree.h"
+#include "funcs.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -8,9 +9,15 @@
 
 static FileTree *ft = nullptr;
 
+static void release_ufs() {
+  save(&(ft->tree), &(ft->project));
+  delete ft;
+}
+
 void init_ufs() {
   ft = new FileTree;
   ft->init();
+  atexit(release_ufs);
 }
 
 // file type must be a file, not a directory
@@ -125,6 +132,7 @@ void mkdir(Identity *id, bool m, int usermode, int groupmode, bool parents, bool
 }
 
 void cd(Identity *id, std::string directory, char *newDirectory) {
+
   ft->cd(directory, newDirectory);
   // std::string gn = id->groupname;
   // std::string un = id->username;

@@ -24,6 +24,7 @@ configure_file(data/userdata.csv ${CMAKE_BINARY_DIR}/test/userdata.csv COPYONLY)
 configure_file(data/userGroupData.csv ${CMAKE_BINARY_DIR}/test/userGroupData.csv COPYONLY)
 configure_file(data/CommandToInt.csv ${CMAKE_BINARY_DIR}/test/CommandToInt.csv COPYONLY)
 configure_file(data/nodeInfo.csv ${CMAKE_BINARY_DIR}/test/nodeInfo.csv COPYONLY)
+configure_file(data/tree.csv ${CMAKE_BINARY_DIR}/test/tree.csv COPYONLY)
 configure_file(storage/hdd.bin ${CMAKE_BINARY_DIR}/test/hdd.bin COPYONLY)
 
 add_subdirectory(src)
