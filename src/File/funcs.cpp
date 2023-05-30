@@ -28,15 +28,15 @@ void save(std::vector<std::vector<int>> *tree, std::map<int, Node *> *info) {
     Node *t = it->second;
     // non-iterables.
     // clang-format off
-    nodeInfof << it->first << ','; // node index
-    nodeInfof << t->fd << ',' 
-              << t->name << ',' 
-              << t->type << ',' 
-              << t->length << ',' 
-              << t->link_num << ','
-              << t->create_time << ',' 
-              << t->last_modify << ',' 
-              << t->parent << ',';
+        nodeInfof << it->first << ','; // node index
+        nodeInfof << t->fd << ','
+                  << t->name << ','
+                  << t->type << ','
+                  << t->length << ','
+                  << t->link_num << ','
+                  << t->create_time << ','
+                  << t->last_modify << ','
+                  << t->parent << ',';
     // clang-format on
     // group previleges.
     auto sz = t->group_privilege.size();
@@ -50,6 +50,7 @@ void save(std::vector<std::vector<int>> *tree, std::map<int, Node *> *info) {
       nodeInfof << i.first << ',' << i.second << ',';
     // location
     sz = t->location.size();
+    nodeInfof << sz << ',';
     for (auto i : t->location)
       nodeInfof << i << ',';
     // link
@@ -64,7 +65,6 @@ void save(std::vector<std::vector<int>> *tree, std::map<int, Node *> *info) {
   treef.close();
   nodeInfof.close();
 }
-
 void load(std::vector<std::vector<int>> *tree, std::map<int, Node *> *node_info) {
   std::ifstream treef, nodeInfof;
   std::stringstream ss;
@@ -126,15 +126,15 @@ void load(std::vector<std::vector<int>> *tree, std::map<int, Node *> *node_info)
       t->group_privilege.insert(std::make_pair(vs[i], strToInt(vs[i + 1])));
       i += 2;
     }
-    cnt = strToInt(vs[i]);
+    cnt = strToInt(vs[i++]);
     while (cnt--) {
       t->user_privilege.insert(std::make_pair(vs[i], strToInt(vs[i + 1])));
       i += 2;
     }
-    cnt = strToInt(vs[i]);
+    cnt = strToInt(vs[i++]);
     while (cnt--)
       t->location.push_back(strToInt(vs[i++]));
-    cnt = strToInt(vs[i]);
+    cnt = strToInt(vs[i++]);
     while (cnt--)
       t->link.insert(strToInt(vs[i++]));
     node_info->insert(std::make_pair(node_id, t));
