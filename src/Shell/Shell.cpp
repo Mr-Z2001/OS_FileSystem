@@ -375,7 +375,7 @@ void Shell::login() {
   std::cout << "Username: ";
 
   std::cin >> _username;
-  // std::cin.ignore();
+  std::cin.ignore();
   std::cout << "Password: ";
   getpass(pwd);
   _password = pwd;
