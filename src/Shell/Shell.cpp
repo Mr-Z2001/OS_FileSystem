@@ -355,6 +355,33 @@ void Shell::start() {
     case -1:
       // pass
       break;
+    case 14: // chmod
+    {
+      int argc = tokens.size();
+      char *argv[argc];
+      for (int i = 0; i < argc; ++i)
+        argv[i] = const_cast<char *>(tokens[i].c_str());
+      const char *optstring = "Rr";
+      int opt;
+      bool R = false;
+      while ((opt = getopt(argc, argv, optstring)) != -1) {
+        switch (opt) {
+        case 'R':
+        case 'r':
+          R = true;
+          break;
+        default:
+          std::cerr << "Unknown option" << std::endl;
+          break;
+        }
+      }
+      int mod = std::stod(tokens[optind]);
+      optind++;
+      std::vector<std::string> filenames;
+      filenames.assign(tokens.begin() + optind, tokens.end() - 1);
+      chmod(id, R, mod, filenames);
+      break;
+    }
     default: // unknown-command
       std::cerr << "Unknown command: " << command << std::endl;
       break;
