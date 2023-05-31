@@ -59,7 +59,7 @@ int Shell::getCommandType(std::string command) { return this->commands[command];
 
 void Shell::start() {
   loadCommandMap();
-  Identity id[1];
+  Identity *id = new Identity;
   id->groupname = userGroup->getName();
   id->username = user->getUsername();
   bool end_flag = false;
@@ -354,6 +354,7 @@ void Shell::start() {
     }
     free(this->line_read);
   }
+  delete (id);
 }
 
 void Shell::stop() { free(this->line_read); }
@@ -387,7 +388,7 @@ void Shell::login() {
 
   bool state = userManager->login(_username, _password_224);
   if (state) {
-    std::cout << "Welcome, " << _username << '.' << std::endl;
+    std::cout << std::endl << "Welcome, " << _username << '.' << std::endl;
     user = userManager->getUser(_username);
     userGroup = userManager->getUserGroup(user);
     strcpy(this->username, _username.c_str());
