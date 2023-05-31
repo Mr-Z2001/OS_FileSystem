@@ -369,15 +369,20 @@ void Shell::read_line() {
 void Shell::login() {
   std::string _username;
   std::string _password;
+  char pwd[128];
   std::string _password_224;
 
   std::cout << "Username: ";
 
-  // std::cin >> username;
+  std::cin >> _username;
   // std::cin.ignore();
-  // password = getpass("Password: ");
-  _username = "admin";
-  _password = "password";
+  std::cout << "Password: ";
+  getpass(pwd);
+  _password = pwd;
+  // _password = getpass("Password: ");
+  // fflush(stdin);
+  // _username = "admin";
+  // _password = "password";
   _password_224 = calculateSHA224(_password);
 
   bool state = userManager->login(_username, _password_224);
