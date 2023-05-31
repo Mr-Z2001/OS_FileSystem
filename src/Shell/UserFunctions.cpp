@@ -135,6 +135,7 @@ void cd(Identity *id, std::string directory, char *newDirectory) {
 
   ft->cd(directory, newDirectory);
   std::string str = ft->full_name(directory);
+  str += '\0';
   strcpy(newDirectory, str.c_str());
   // std::string gn = id->groupname;
   // std::string un = id->username;
