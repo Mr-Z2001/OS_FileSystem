@@ -23,7 +23,7 @@ void init_ufs() {
 // file type must be a file, not a directory
 void create(Identity *id, std::string filename) { ft->create(id, filename); }
 
-void pwd(std::string cwd) { ft->cwd(cwd); }
+void pwd(char *cwd) { ft->cwd(cwd); }
 
 void rm(Identity *id, bool force, bool interactive, bool recursive, bool directory, bool verbose,
         std::vector<std::string> filenames) {

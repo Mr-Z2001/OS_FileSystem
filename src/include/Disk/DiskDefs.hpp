@@ -31,7 +31,7 @@ constexpr size_t BLOK_NM = 1 << 9;
 constexpr size_t FRME_NM = 1 << 4;
 constexpr size_t PAGE_SIZ = 4 * KiB;
 
-using blockid_t = uint64_t;
+using blockid_t = int;
 using frameid_t = uint64_t;
 using pageid_t = uint64_t;
 using addr_t = intptr_t;

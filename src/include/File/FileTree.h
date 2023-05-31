@@ -37,7 +37,7 @@ public:
   void mkdir(Identity *id, bool m, int user_mode, int group_mode, bool parents, bool verbose,
              std::string directory); // 创建目录
   int get_current_directory();
-  void cwd(std::string cwd);
+  void cwd(char *cwd);
   void rm(Identity *id, bool force, bool interactive, bool recursive, bool directory, bool verbose,
           std::vector<std::string> filenames);
   std::string read(Identity *id, std::string filename, int block_num);

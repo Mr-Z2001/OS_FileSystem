@@ -10,8 +10,8 @@
 FileTree::FileTree() {
   index = 0;
   current_directory = 0;
-  dmgr = new Disk::DiskManager("hdd.bin");
 }
+
 void FileTree::addChild(int parent, Node *child_p) {
   index++;
   child_p->parent = parent;
@@ -33,11 +33,19 @@ void FileTree::init() {
   //   addChild(0, home);
 
   load(&tree, &project);
+  set_index();
   current_directory = 0;
+
+  std::vector<int> allblk; 
+  for (auto &&fp: project) {
+    allblk.insert(allblk.end(), fp.second->location.begin(), fp.second->location.end());
+  }
+  dmgr = new Disk::DiskManager("hdd.bin", allblk);
 }
 int FileTree::get_current_directory() { return current_directory; }
-int FileTree::find_node_by_name(std::string name) // 在当前目录根据名字找到node
-{
+
+// 在当前目录根据名字找到node
+int FileTree::find_node_by_name(std::string name) {
 
   auto node = project.find(current_directory);
 
@@ -104,8 +112,10 @@ int FileTree::find_node_by_path(std::string path) // 按路径查找
   }
 
   for (int i = 0; i < words.size(); ++i) {
+    auto curdir = current_directory;
     current_directory = find_node_by_name(words[i]);
     if (current_directory == -1) {
+      current_directory = curdir;
       return -1;
     }
   }
@@ -113,34 +123,43 @@ int FileTree::find_node_by_path(std::string path) // 按路径查找
 }
 void FileTree::create(Identity *id, std::string filename) {
   if (!is_path(filename)) {
+    auto curdir = current_directory;
+    if (find_node_by_name(filename) != -1) {
+      current_directory = curdir;
+      std::cout << "file duplicated" << std::endl;
+      return;
+    }
     Node *file = new Node(id, filename);
+    file->location.push_back(dmgr->blk_alloc(1)[0]);
     addChild(current_directory, file);
-
   } else {
     std::vector<std::string> words;
-    if (filename[0] == '/') // 绝对路径
-    {
+    if (filename[0] == '/') {
       current_directory = 0;
       words = split(filename, 0); // 按绝对路径切片
       for (int i = 0; i < words.size() - 1; ++i) {
         current_directory = find_node_by_name(words[i]);
         if (current_directory == -1) {
           std::cout << "error path" << std::endl; // 没找到目录
+          current_directory = 0;
           return;
         }
       }
       Node *newfile = new Node(id, words[words.size() - 1]);
-      // newfile.location=blk_alloc(size_t 1)
+      newfile->location.push_back(dmgr->blk_alloc(1)[0]);
       addChild(current_directory, newfile);
     }
   }
 }
-void FileTree::cwd(std::string cwd) { std::cout << cwd << std::endl; }
+void FileTree::cwd(char *cwd) {
+  std::string pwd = project.find(current_directory)->second->name;
+  strncpy(cwd, pwd.data(), pwd.size());
+}
 
 void FileTree::delete_file(Node *file) // 删除一个文件
 {
 
-  // blk_release(file->location); //释放硬盘空间
+  dmgr->blk_release(file->location); //释放硬盘空间
   auto parent = file->getParent();
   for (int i = 0; i < tree[parent].size(); ++i) {
     auto kk = project.find(tree[parent][i])->second;
@@ -279,6 +298,7 @@ void FileTree::rm(Identity *id, bool force, bool interactive, bool recursive, bo
     {
       if (!force) {
         std::cout << "error filename" << std::endl;
+        current_directory = temp_file;
         return;
       }
     } else // 找到文件
@@ -313,6 +333,7 @@ void FileTree::rm(Identity *id, bool force, bool interactive, bool recursive, bo
   }
 }
 std::string FileTree::read(Identity *id, std::string filename, int block_num) {
+  auto curdir = current_directory;
   auto file = find_node_by_path(filename);
 
   if (file == -1) {
@@ -336,19 +357,22 @@ std::string FileTree::read(Identity *id, std::string filename, int block_num) {
     }
     if (gp_permission && up_permission) {
       std::string res = "";
-      for (int i = 0; i < block_num - 1; ++i) {
+      for (int i = 0; i < block_num; ++i) {
         auto bid = file_p->location[i];
         char buf[Disk::PAGE_SIZ];
         auto len = Disk::PAGE_SIZ;
         dmgr->blk_read(bid, (void *)buf, len);
         res += {buf};
       }
+      current_directory = curdir;
       return res;
     } else {
       std::cout << "no permission" << std::endl;
+      current_directory = curdir;
       return "";
     }
   }
+  current_directory = curdir;
 }
 
 // 1行32个字符，1块4096有128行
@@ -379,77 +403,77 @@ void FileTree::cd(std::string filename, char *newdir) {
 }
 
 void FileTree::write(Identity *id, bool append, bool overwrite, std::string filename, std::string text) {
+  auto curdir = current_directory;
   auto file = find_node_by_path(filename);
 
   if (file == -1) {
     std::cout << "file no exist" << std::endl;
     return;
-  } else {
-    auto file_p = project.find(file)->second;
-    auto gp = file_p->group_privilege;
-    auto up = file_p->user_privilege;
-    bool gp_permission = false;
-    bool up_permission = false;
-    for (auto i : gp) {
-      if (i.first == id->groupname && (i.second == 111 || i.second == 110 || i.second == 011 || i.second == 010)) {
-        gp_permission = true;
-      }
-    }
-    for (auto i : up) {
-      if (i.first == id->username && (i.second == 111 || i.second == 110 || i.second == 011 || i.second == 010)) {
-        up_permission = true;
-      }
-    }
-    if (gp_permission && up_permission) {
-      if (append) {
-        auto block_num = text.size() / Disk::PAGE_SIZ + 1;
-        auto vec = dmgr->blk_alloc(block_num);
-        file_p->location.insert(file_p->location.end(), vec.begin(), vec.end());
-        for (int i = 0; i < block_num; ++i) {
-          if (text.size() > Disk::PAGE_SIZ) {
-            text = text.substr(0, Disk::PAGE_SIZ);
-            auto buf = text.data();
-            auto len = Disk::PAGE_SIZ;
-            dmgr->blk_write(vec[i], (void *)buf, len);
-          } else {
-            auto buf = text.data();
-            auto len = Disk::PAGE_SIZ;
-            dmgr->blk_write(vec[i], (void *)buf, len);
-          }
-        }
-      }
-      if (overwrite) {
-        auto block_num = text.size() / Disk::PAGE_SIZ + 1;
-        if (block_num > file_p->location.size()) {
-          auto vec = dmgr->blk_alloc(block_num - file_p->location.size());
-          file_p->location.insert(file_p->location.end(), vec.begin(), vec.end());
-        }
-        for (int i = 0; i < block_num; ++i) {
-          if (text.size() > Disk::PAGE_SIZ) {
-            text = text.substr(0, Disk::PAGE_SIZ);
-            auto buf = text.data();
-            auto len = Disk::PAGE_SIZ;
-            dmgr->blk_write(file_p->location[i], (void *)buf, len);
-          } else {
-            auto buf = text.data();
-            auto len = Disk::PAGE_SIZ;
-            dmgr->blk_write(file_p->location[i], (void *)buf, len);
-          }
-        }
-      }
+  }
 
-      auto bid = file_p->location[0];
-      auto buf = text.data();
-
-      auto len = Disk::PAGE_SIZ;
-      dmgr->blk_write(bid, (void *)buf, len);
-
-      return;
-    } else {
-      std::cout << "no permission" << std::endl;
-      return;
+  auto file_p = project.find(file)->second;
+  auto gp = file_p->group_privilege;
+  auto up = file_p->user_privilege;
+  bool gp_permission = false;
+  bool up_permission = false;
+  for (auto i : gp) {
+    if (i.first == id->groupname && (i.second == 111 || i.second == 110 || i.second == 011 || i.second == 010)) {
+      gp_permission = true;
     }
   }
+  for (auto i : up) {
+    if (i.first == id->username && (i.second == 111 || i.second == 110 || i.second == 011 || i.second == 010)) {
+      up_permission = true;
+    }
+  }
+  if (gp_permission && up_permission) {
+    
+    if (append) {
+      text = read(id, filename, file_p->location.size()) + text;
+      overwrite = true;
+    }
+
+    if (overwrite) {
+      auto textlen = text.size();
+      auto text_blk_num = textlen / Disk::PAGE_SIZ + !!(textlen % Disk::PAGE_SIZ);
+      auto cur_blk_num = file_p->location.size();
+      if (cur_blk_num < text_blk_num) {
+        auto extra_blk_num = text_blk_num - cur_blk_num;
+        auto &&newblks = dmgr->blk_alloc(extra_blk_num);
+        file_p->location.insert(file_p->location.end(), newblks.begin(), newblks.end());
+      }
+      file_p->length = textlen;
+      auto cur_wrt_len = 0;
+
+      for (int i = 0; i < text_blk_num; ++i) {
+        auto cur_text = text.substr(cur_wrt_len, Disk::PAGE_SIZ);
+        if (text.size() > Disk::PAGE_SIZ) {
+          auto buf = cur_text.data();
+          auto len = Disk::PAGE_SIZ;
+          dmgr->blk_write(file_p->location[i], (void *)buf, len);
+          cur_wrt_len += Disk::PAGE_SIZ;
+        } else {
+          auto buf = cur_text.data();
+          auto len = cur_text.size();
+          char tmpbuf[4096] = {0};
+          memcpy(tmpbuf, buf, len);
+          dmgr->blk_write(file_p->location[i], (void *)tmpbuf, Disk::PAGE_SIZ);
+        }
+      }
+    }
+
+    auto bid = file_p->location[0];
+    auto buf = text.data();
+
+    auto len = Disk::PAGE_SIZ;
+    dmgr->blk_write(bid, (void *)buf, len);
+
+    current_directory = curdir;
+    return;
+  }
+
+  current_directory = curdir;
+  std::cout << "no permission" << std::endl;
 }
 
 void FileTree::tostring(int file, std::string &path) {

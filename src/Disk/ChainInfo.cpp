@@ -2,7 +2,7 @@
 
 Disk::BlockChainManager::BlockChainManager() {
   for (size_t i = 0; i < GROUP_SIZ; ++i) {
-    bc_->status = 0;
+    bc_[i].status = 0;
   }
 }
 
@@ -31,7 +31,8 @@ auto Disk::BlockChainManager::alloc(size_t nm) -> Disk::Vec<Disk::blockid_t> {
     for (size_t i = 0; i < 64; ++i) {
       if (((mask << i) & curbc->status) == 0) {
         result.push_back(chain_id * 64 + i);
-        curbc->status = curbc->status | (mask << i);
+        auto nwstat = curbc->status | (mask << i);
+        curbc->status = nwstat;
         nm -= 1;
         if (nm == 0) {
           break;
@@ -41,7 +42,8 @@ auto Disk::BlockChainManager::alloc(size_t nm) -> Disk::Vec<Disk::blockid_t> {
 
     for (size_t i = 1; i < 64; ++i) {
       if (bc_[i].status == (size_t)-1) {
-        bc_[0].status = bc_[0].status | (mask << i);
+        auto nwstat = bc_[0].status | (mask << i);
+        bc_[0].status = nwstat;
       }
     }
   }
@@ -53,17 +55,20 @@ auto Disk::BlockChainManager::release(Disk::Vec<Disk::blockid_t> &blks) -> void 
   const size_t mask = 0x1;
 
   for (auto &&bid : blks) {
-    bc_[bid / 64].status = bc_[bid / 64].status & ~(mask << (bid % 64));
+    auto nwstat = bc_[bid / 64].status & ~(mask << (bid % 64));
+    bc_[bid / 64].status = nwstat;
   }
 
   for (size_t i = 1; i < 64; ++i) {
     if (bc_[i].status != (size_t)-1) {
-      bc_[0].status = bc_[0].status & ~(mask << i);
+      auto nwstat = bc_[0].status & ~(mask << i);
+      bc_[0].status = nwstat;
     }
   }
 }
 
 auto Disk::BlockChainManager::mark(blockid_t bid) -> void {
   const size_t mask = 0x1;
-  bc_[bid / 64].status = bc_[bid / 64].status | (mask << (bid % 64));
+  auto nwstat = bc_[bid / 64].status | (mask << (bid % 64));
+  bc_[bid / 64].status = nwstat;
 }

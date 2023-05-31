@@ -22,8 +22,9 @@ std::string calculateSHA224(const std::string &str) {
 
 auto strToInt(std::string str) -> int {
   int x = 0;
-  if (str.back() == '\r')
+  if (str.back() == '\r') {
     str.pop_back();
+  }
   for (auto c : str)
     x = (x << 3) + (x << 1) + c - '0';
   return x;
