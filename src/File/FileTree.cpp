@@ -301,12 +301,10 @@ void FileTree::rm(Identity *id, bool force, bool interactive, bool recursive, bo
         current_directory = temp_file;
         return;
       }
-    } else // 找到文件
-    {
+    } else { // 找到文件
 
       auto file_pointer = project.find(file_int)->second;
-      if (file_pointer->getType() == "file") // 是纯文件
-      {
+      if (file_pointer->getType() == "file") { // 是纯文件
         std::string receiver = "yes";
         if (interactive) {
           std::cout << "remove " << file_pointer->name << " ?(y/n)" << std::endl;
@@ -320,8 +318,7 @@ void FileTree::rm(Identity *id, bool force, bool interactive, bool recursive, bo
           }
         }
 
-      } else if (file_pointer->getType() == "directory") // 删除目录
-      {
+      } else if (file_pointer->getType() == "directory") { // 删除目录
         if (recursive) {
           delete_directory(file_int);
         } else {
@@ -387,6 +384,16 @@ void FileTree::cat(Identity *id, bool head, bool tail, bool more, bool number, i
 }
 
 void FileTree::cd(std::string filename, char *newdir) {
+  if (filename == "..") {
+    if (current_directory == 0) {
+      return;
+    }
+
+    auto p = project.find(current_directory)->second->parent;
+    current_directory = p;
+    strncpy(newdir, (char *)project.find(current_directory)->second->name.data(), 128);
+    return;
+  }
   if (filename == "/") {
     current_directory = 0;
     strncpy(newdir, "/", 128);
@@ -397,6 +404,7 @@ void FileTree::cd(std::string filename, char *newdir) {
   if (current_directory == -1) {
     std::cout << "error path" << std::endl;
     current_directory = temp;
+    return;
   }
   strncpy(newdir, (char *)project.find(current_directory)->second->name.data(), 128);
   return;
@@ -484,7 +492,10 @@ void FileTree::tostring(int file, std::string &path) {
   if (path == "//")
     std::cout << "/" << std::endl;
   else {
-    std::cout << path.substr(2) << std::endl;
+    if (path.substr(0, 2) == "//")
+      std::cout << path.substr(2) << std::endl;
+    else
+      std::cout << path << std::endl;
   }
   if (tree[file].size() == 0)
     return;
@@ -494,9 +505,23 @@ void FileTree::tostring(int file, std::string &path) {
   }
 }
 
-void FileTree::ls() {
+void FileTree::ls(std::string paths) {
+  int last_file;
+  if (paths == "") {
+    last_file = current_directory;
+  } else if (paths == "/") {
+    auto index = 0;
+    std::string path = "";
+    tostring(index, path);
+    return;
+  } else if (is_path(paths)) {
+    last_file = find_node_by_path(paths);
+  } else {
+    last_file = find_node_by_name(paths);
+  }
+
   std::string path = "";
-  tostring(0, path);
+  tostring(last_file, path);
 }
 
 void FileTree::chmod(Identity *id, bool recursive, int user_mode, int group_mode, std::vector<std::string> filename) {
@@ -524,6 +549,10 @@ void FileTree::print() {
   }
 }
 std::string FileTree::full_name(std::string input) {
+  if (input == "/") {
+    return input;
+  }
+
   if (input.size() > 3 && input.substr(0, 3) == "../") // 回上一级
   {
     input = input.substr(3);

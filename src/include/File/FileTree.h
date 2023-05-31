@@ -45,7 +45,7 @@ public:
   void write(Identity *id, bool append, bool overwrite, std::string filename, std::string text);
   void cat(Identity *id, bool head, bool tail, bool more, bool number, int n, std::vector<std::string> filename);
   void chmod(Identity *id, bool recursive, int user_mode, int group_mode, std::vector<std::string> filename);
-  void ls();
+  void ls(std::string paths);
 
   void cd(std::string filename, char *newdir); //
 

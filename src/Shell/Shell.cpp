@@ -29,7 +29,7 @@ Shell::~Shell() {
 char *Shell::getLineRead() { return this->line_read; }
 
 char *Shell::getPrompt() {
-  pwd(cwd);
+  // pwd(cwd);
   sprintf(this->prompt, "%s@%s:%s$ ", this->username, this->hostname, cwd);
   return this->prompt;
 }
@@ -54,6 +54,7 @@ void Shell::loadCommandMap() {
     this->commands[command] = cmdType;
   }
   f.close();
+  commands[""] = -1;
 }
 
 int Shell::getCommandType(std::string command) { return this->commands[command]; }
@@ -351,6 +352,9 @@ void Shell::start() {
       end_flag = true;
       break;
     }
+    case -1:
+      // pass
+      break;
     default: // unknown-command
       std::cerr << "Unknown command: " << command << std::endl;
       break;

@@ -27,6 +27,9 @@ void pwd(char *cwd) { ft->cwd(cwd); }
 
 void rm(Identity *id, bool force, bool interactive, bool recursive, bool directory, bool verbose,
         std::vector<std::string> filenames) {
+  if (filenames.back() == "") {
+    filenames.pop_back();
+  }
   ft->rm(id, force, interactive, recursive, directory, verbose, filenames);
   // std::string gn = id->groupname;
   // std::string un = id->username;
@@ -134,8 +137,8 @@ void mkdir(Identity *id, bool m, int usermode, int groupmode, bool parents, bool
 void cd(Identity *id, std::string directory, char *newDirectory) {
 
   ft->cd(directory, newDirectory);
-  std::string str = ft->full_name(directory);
-  str += '\0';
+  std::string str = ft->full_name(newDirectory);
+  str.push_back('\0');
   strcpy(newDirectory, str.c_str());
   // std::string gn = id->groupname;
   // std::string un = id->username;
@@ -154,7 +157,8 @@ void cd(Identity *id, std::string directory, char *newDirectory) {
 
 void ls(Identity *id, bool all, bool almost_all, bool _directory, bool human_readable, bool inode, bool list,
         bool recursive, bool sortBySize, bool sortByTime, std::string directory) {
-  ft->ls();
+  
+  ft->ls(directory);
   // std::string gn = id->groupname;
   // std::string un = id->username;
   // std::vector<std::string> files;
