@@ -29,7 +29,8 @@ Shell::~Shell() {
 char *Shell::getLineRead() { return this->line_read; }
 
 char *Shell::getPrompt() {
-  sprintf(this->prompt, "%s@%s:%s$ ", this->username, this->hostname, this->cwd);
+  pwd(cwd);
+  sprintf(this->prompt, "%s@%s:%s$ ", this->username, this->hostname, cwd);
   return this->prompt;
 }
 
@@ -65,6 +66,7 @@ void Shell::start() {
   bool end_flag = false;
   while (!end_flag) {
     read_line();
+    optind = 0;
     std::vector<std::string> tokens = parse(this->line_read);
     std::string command = tokens[0];
     int cmdType = getCommandType(command);
@@ -228,6 +230,7 @@ void Shell::start() {
       break;
     case 9: // pwd
       pwd(cwd);
+      std::cout << cwd << std::endl;
       break;
     case 10: // ls
     {

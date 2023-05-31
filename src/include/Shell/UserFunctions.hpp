@@ -17,7 +17,7 @@ void cat(Identity *identity, bool head, bool tail, bool more, bool number, int n
 void write(Identity *identity, bool append, bool overwrite, std::string filename, std::string text);
 void mkdir(Identity *identity, bool m, int usermode, int groupmode, bool parents, bool verbose, std::string directory);
 void cd(Identity *identity, std::string directory, char *newDirectory);
-void pwd(std::string cwd);
+void pwd(char *cwd);
 void ls(Identity *identity, bool all, bool almost_all, bool _directory, bool human_readable, bool inode, bool list,
         bool recursive, bool sortBySize, bool sortByTime, std::string directory);
 void mv(Identity *identity, bool force, bool interactive, bool verbose, std::vector<std::string> source,

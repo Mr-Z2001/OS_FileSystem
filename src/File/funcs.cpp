@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cstring>
 
 void save(std::vector<std::vector<int>> *tree, std::map<int, Node *> *info) {
   std::ofstream treef, nodeInfof;
@@ -66,6 +67,27 @@ void save(std::vector<std::vector<int>> *tree, std::map<int, Node *> *info) {
   nodeInfof.close();
 }
 void load(std::vector<std::vector<int>> *tree, std::map<int, Node *> *node_info) {
+  FILE *tree_file = fopen("tree.csv", "r");
+  FILE *node_file = fopen("nodeInfo.csv", "r");
+  assert(tree_file && node_info);
+
+  char buf[128] = {0};
+
+  int treesiz = 0, recordnm = 0;
+  fgets(buf, 128, tree_file);
+  sscanf(buf, "%d,%d", &treesiz, &recordnm);
+  tree->resize(treesiz);
+
+  while (recordnm --> 0) {
+    fgets(buf, 128, tree_file);
+    int lhs, rhs;
+    sscanf(buf, "%d,%d", &lhs, &rhs);
+    tree->at(lhs).push_back(rhs);
+  }
+
+  fclose(tree_file);
+  fclose(node_file);
+
   std::ifstream treef, nodeInfof;
   std::stringstream ss;
   std::string line;
@@ -74,27 +96,6 @@ void load(std::vector<std::vector<int>> *tree, std::map<int, Node *> *node_info)
   nodeInfof.open("nodeInfo.csv");
   // check
   assert(treef.is_open() && nodeInfof.is_open());
-
-  // load tree (vector<vector<int>>)
-  size_t n, m;
-  std::getline(treef, line);
-  ss.str(line);
-  ss.clear();
-  std::getline(ss, cell, ',');
-  n = strToInt(cell);
-  std::getline(ss, cell, ',');
-  m = strToInt(cell);
-
-  std::vector<int> v;
-  tree->resize(n);
-  while (std::getline(treef, line)) {
-    ss.str(line);
-    ss.clear();
-    while (std::getline(ss, cell, ','))
-      v.push_back(strToInt(cell));
-    tree->at(v[0]).push_back(v[1]);
-    v.clear();
-  }
 
   // load nodeInfo (map)
   Node *t;
@@ -139,6 +140,7 @@ void load(std::vector<std::vector<int>> *tree, std::map<int, Node *> *node_info)
       t->link.insert(strToInt(vs[i++]));
     node_info->insert(std::make_pair(node_id, t));
   }
+
   treef.close();
   nodeInfof.close();
 }
