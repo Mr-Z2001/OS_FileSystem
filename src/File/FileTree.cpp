@@ -36,8 +36,8 @@ void FileTree::init() {
   set_index();
   current_directory = 0;
 
-  std::vector<int> allblk; 
-  for (auto &&fp: project) {
+  std::vector<int> allblk;
+  for (auto &&fp : project) {
     allblk.insert(allblk.end(), fp.second->location.begin(), fp.second->location.end());
   }
   dmgr = new Disk::DiskManager("hdd.bin", allblk);
@@ -159,7 +159,7 @@ void FileTree::cwd(char *cwd) {
 void FileTree::delete_file(Node *file) // 删除一个文件
 {
 
-  dmgr->blk_release(file->location); //释放硬盘空间
+  dmgr->blk_release(file->location); // 释放硬盘空间
   auto parent = file->getParent();
   for (int i = 0; i < tree[parent].size(); ++i) {
     auto kk = project.find(tree[parent][i])->second;
@@ -427,7 +427,7 @@ void FileTree::write(Identity *id, bool append, bool overwrite, std::string file
     }
   }
   if (gp_permission && up_permission) {
-    
+
     if (append) {
       text = read(id, filename, file_p->location.size()) + text;
       overwrite = true;
