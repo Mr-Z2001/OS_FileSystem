@@ -10,4 +10,6 @@ std::vector<std::string> parse(std::string line);
 
 int cstrToInt(char *c_str);
 
+std::vector<std::string> split(std::string str, char delim);
+
 #endif

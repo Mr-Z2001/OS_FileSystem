@@ -1,13 +1,17 @@
+#include <algorithm>
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "DiskDefs.hpp"
+#include "FileTree.h"
 #include "Shell.hpp"
-#include "ShellFunctions.hpp"
 #include "UserFunctions.hpp"
 #include "utils.hpp"
+
+extern FileTree *ft;
 
 Shell::Shell(char *username, char *hostname, char *cwd) {
   init_ufs();
@@ -45,19 +49,24 @@ UserManager *Shell::getUserManager() {
 }
 
 void Shell::loadCommandMap() {
-  std::ifstream f;
-  f.open("CommandToInt.csv");
-  std::string line;
-  while (f >> line) {
-    std::string command = line.substr(0, line.find(','));
-    int cmdType = std::stoi(line.substr(line.find(',') + 1));
-    this->commands[command] = cmdType;
+  Disk::blockid_t bid = 4;
+  char *buf;
+  size_t buflen = Disk::PAGE_SIZ;
+  ft->sysread(bid, buf, buflen);
+  std::string s(buf);
+  std::vector<std::string> lines = split(s, '\n');
+  for (auto line : lines) {
+    std::vector<std::string> tokens = split(line, ',');
+    if (tokens.size() == 2) {
+      std::string command = tokens[0];
+      int cmdType = std::stoi(tokens[1]);
+      this->commands[command] = cmdType;
+    }
   }
-  f.close();
   commands[""] = -1;
 }
 
-int Shell::getCommandType(std::string command) { return this->commands[command]; }
+int Shell::getCommandType(std::string command) { return commands.count(command) ? commands[command] : -1; }
 
 void Shell::start() {
   loadCommandMap();

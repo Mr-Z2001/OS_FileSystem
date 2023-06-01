@@ -1,9 +1,13 @@
 #ifndef __USERFUNCTIONS_HPP__
 #define __USERFUNCTIONS_HPP__
 
+#include "FileTree.h"
 #include "Identity.h"
+
 #include <string>
 #include <vector>
+
+static FileTree *ft = nullptr;
 
 void init_ufs();
 

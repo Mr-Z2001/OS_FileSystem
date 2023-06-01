@@ -1,53 +1,98 @@
 #include "UserManager.hpp"
+#include "FileTree.h"
 // #include "cryptopp/sha.h"
+#include "DiskDefs.hpp"
+#include "UserFunctions.hpp"
 #include "utils.hpp"
+
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <regex>
 
+extern FileTree *ft;
+
 void UserManager::loadUserMap() {
-  std::ifstream f;
-  f.open("userdata.csv");
-  assert(f.is_open());
-  std::string line;
-  while (std::getline(f, line)) {
-    std::vector<std::string> data;
-    std::regex pattern(",");
-    std::copy(std::sregex_token_iterator(line.begin(), line.end(), pattern, -1), std::sregex_token_iterator(),
-              std::back_inserter(data));
+  Disk::blockid_t bid = 0;
+  char *buf;
+  size_t buflen = Disk::PAGE_SIZ;
+  ft->sysread(bid, buf, buflen);
+  std::string str(buf);
+  std::vector<std::string> data;
+  data = split(str, '\n');
+  for (int i = 0; i < data.size(); ++i) {
+    auto p = split(data[i], ',');
     User *u = new User;
-    u->setID(std::stod(data[0]));
-    u->setUsername(data[1]);
-    u->setPassword(data[2]);
+    u->setID(std::stod(p[0]));
+    u->setUsername(p[1]);
+    u->setPassword(p[2]);
     userMap.insert(std::pair<int, User *>(u->getID(), u));
     users.push_back(u->getID());
     usercnt++;
   }
-  f.close();
+
+  // std::ifstream f;
+  // f.open("userdata.csv");
+  // assert(f.is_open());
+  // std::string line;
+  // while (std::getline(f, line)) {
+  //   std::vector<std::string> data;
+  //   std::regex pattern(",");
+  //   std::copy(std::sregex_token_iterator(line.begin(), line.end(), pattern, -1), std::sregex_token_iterator(),
+  //             std::back_inserter(data));
+  //   User *u = new User;
+  //   u->setID(std::stod(data[0]));
+  //   u->setUsername(data[1]);
+  //   u->setPassword(data[2]);
+  //   userMap.insert(std::pair<int, User *>(u->getID(), u));
+  //   users.push_back(u->getID());
+  //   usercnt++;
+  // }
+  // f.close();
 }
 
 void UserManager::loadUserGroupMap() {
-  std::ifstream f;
-  f.open("userGroupData.csv");
-  assert(f.is_open());
-  std::string line;
-  while (std::getline(f, line)) {
-    std::vector<std::string> data;
-    std::regex pattern(",");
-    std::copy(std::sregex_token_iterator(line.begin(), line.end(), pattern, -1), std::sregex_token_iterator(),
-              std::back_inserter(data));
+
+  Disk::blockid_t bid = 1;
+  char *buf;
+  size_t buflen = Disk::PAGE_SIZ;
+  ft->sysread(bid, buf, buflen);
+  std::string str(buf);
+  std::vector<std::string> data;
+  data = split(str, '\n');
+  for (int i = 0; i < data.size(); ++i) {
+    auto p = split(data[i], ',');
     UserGroup *ug = new UserGroup;
-    ug->setId(std::stod(data[0]));
-    ug->setName(data[1]);
-    for (int i = 2; i < data.size(); i++) {
-      int u = std::stod(data[i]);
+    ug->setId(std::stod(p[0]));
+    ug->setName(p[1]);
+    for (int i = 3; i < p.size(); i++) {
+      int u = std::stod(p[i]);
       ug->addUser(u);
     }
     userGroupMap.insert(std::pair<int, UserGroup *>(ug->getId(), ug));
     userGroups.push_back(ug->getId());
   }
-  f.close();
+
+  // std::ifstream f;
+  // f.open("userGroupData.csv");
+  // assert(f.is_open());
+  // std::string line;
+  // while (std::getline(f, line)) {
+  //   std::vector<std::string> data;
+  //   std::regex pattern(",");
+  //   std::copy(std::sregex_token_iterator(line.begin(), line.end(), pattern, -1), std::sregex_token_iterator(),
+  //             std::back_inserter(data));
+  //   UserGroup *ug = new UserGroup;
+  //   ug->setId(std::stod(data[0]));
+  //   ug->setName(data[1]);
+  //   for (int i = 2; i < data.size(); i++) {
+  //     int u = std::stod(data[i]);
+  //     ug->addUser(u);
+  //   }
+  //   userGroupMap.insert(std::pair<int, UserGroup *>(ug->getId(), ug));
+  //   userGroups.push_back(ug->getId());
+  // }
+  // f.close();
 }
 
 UserManager::UserManager() {
@@ -174,26 +219,50 @@ int UserManager::getUserIDByName(std::string username) {
 }
 
 void UserManager::saveUserMap() {
-  std::ofstream f;
-  f.open("userdata.csv", std::ios_base::trunc);
-  assert(f.is_open());
+  Disk::blockid_t bid = 0;
+  char *buf;
   for (auto i : userMap) {
-    f << i.second->getID() << "," << i.second->getUsername() << "," << i.second->getPassword() << std::endl;
+    std::string str =
+        std::to_string(i.second->getID()) + "," + i.second->getUsername() + "," + i.second->getPassword() + "\n";
+    strcat(buf, str.c_str());
   }
-  f.close();
+  size_t buflen = Disk::PAGE_SIZ;
+  ft->syswrite(bid, buf, buflen);
+
+  // std::ofstream f;
+  // f.open("userdata.csv", std::ios_base::trunc);
+  // assert(f.is_open());
+  // for (auto i : userMap) {
+  //   f << i.second->getID() << "," << i.second->getUsername() << "," << i.second->getPassword() << std::endl;
+  // }
+  // f.close();
 }
 
 void UserManager::saveUserGroupMap() {
-  std::ofstream f;
-  f.open("userGroupData.csv", std::ios_base::trunc);
-  assert(f.is_open());
+  Disk::blockid_t bid = 1;
+  char *buf;
   for (auto i : userGroupMap) {
-    f << i.second->getId() << "," << i.second->getName() << ',';
-    f << i.second->getUsers().size();
+    std::string str = std::to_string(i.second->getId()) + "," + i.second->getName() + ",";
+    str += std::to_string(i.second->getUsers().size());
     for (auto j : i.second->getUsers()) {
-      f << "," << j;
+      str += "," + std::to_string(j);
     }
-    f << std::endl;
+    str += "\n";
+    strcat(buf, str.c_str());
   }
-  f.close();
+  size_t buflen = Disk::PAGE_SIZ;
+  ft->syswrite(bid, buf, buflen);
+
+  // std::ofstream f;
+  // f.open("userGroupData.csv", std::ios_base::trunc);
+  // assert(f.is_open());
+  // for (auto i : userGroupMap) {
+  //   f << i.second->getId() << "," << i.second->getName() << ',';
+  //   f << i.second->getUsers().size();
+  //   for (auto j : i.second->getUsers()) {
+  //     f << "," << j;
+  //   }
+  //   f << std::endl;
+  // }
+  // f.close();
 }

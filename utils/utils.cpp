@@ -59,3 +59,29 @@ void getpass(char *password) {
   }
   password[i] = '\0';
 }
+
+std::vector<std::string> parse(std::string line) {
+  std::vector<std::string> tokens;
+  std::string token;
+  std::istringstream iss(line);
+  while (iss >> token)
+    tokens.push_back(token);
+  tokens.push_back("");
+  return tokens;
+}
+
+int cstrToInt(char *c_str) {
+  if (c_str == NULL)
+    return -1;
+  std::string str(c_str);
+  return std::stoi(str);
+}
+
+std::vector<std::string> split(std::string str, char delim) {
+  std::vector<std::string> tokens;
+  std::string token;
+  std::istringstream iss(str);
+  while (std::getline(iss, token, delim))
+    tokens.push_back(token);
+  return tokens;
+}

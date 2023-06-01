@@ -19,3 +19,4 @@ add_library(shell ${SHELL_SOURCES})
 
 target_link_libraries(fs PUBLIC disk)
 target_link_libraries(shell PUBLIC readline utils ssl fs)
+target_link_libraries(user PUBLIC disk)
