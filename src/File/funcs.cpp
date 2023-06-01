@@ -32,7 +32,7 @@ void save(std::vector<std::vector<int>> *tree, std::map<int, Node *> *info) {
     for (int j = 0; j < tree->at(i).size(); ++j)
       sz_str += std::to_string(i) + ',' + std::to_string((tree->at(i))[j]) + '\n';
 
-  strcat(nodeInfo_buf, sz_str.c_str());
+  strcat(tree_buf, sz_str.c_str());
 
   // save node info
 
