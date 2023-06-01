@@ -57,14 +57,25 @@ int FileTree::find_node_by_name(std::string name) {
   }
   return -1; // 没找到
 }
+
 bool FileTree::is_path(std::string &filename) {
   int k = filename.find('/');
   if (k >= 0)
     return true;
   return false;
 }
-std::vector<std::string> FileTree::split(std::string path, int type = 0) // 按/切割路径
-{
+
+void FileTree::syswrite(Disk::blockid_t bid, char *buf, size_t buflen) {
+  assert(0 <= bid && 63 >= bid);
+  dmgr->blk_write(bid, buf, buflen);
+}
+
+void FileTree::sysread(Disk::blockid_t bid, char *buf, size_t buflen) {
+  assert(0 <= bid && 63 >= bid);
+  dmgr->blk_read(bid, buf, buflen);
+}
+
+std::vector<std::string> FileTree::split(std::string path, int type = 0) {
   if (path[0] == '/')
     type = 0;
   else
@@ -470,11 +481,11 @@ void FileTree::write(Identity *id, bool append, bool overwrite, std::string file
       }
     }
 
-    auto bid = file_p->location[0];
-    auto buf = text.data();
+    // auto bid = file_p->location[0];
+    // auto buf = text.data();
 
-    auto len = Disk::PAGE_SIZ;
-    dmgr->blk_write(bid, (void *)buf, len);
+    // auto len = Disk::PAGE_SIZ;
+    // dmgr->blk_write(bid, (void *)buf, len);
 
     current_directory = curdir;
     return;
@@ -525,6 +536,7 @@ void FileTree::ls(std::string paths) {
 }
 
 void FileTree::chmod(Identity *id, bool recursive, int user_mode, int group_mode, std::vector<std::string> filename) {
+  auto curdir = current_directory;
   for (auto i : filename) {
     if (is_path(i)) {
       current_directory = find_node_by_path(i);
@@ -538,6 +550,7 @@ void FileTree::chmod(Identity *id, bool recursive, int user_mode, int group_mode
       abc->user_privilege.insert({id->username, user_mode});
     }
   }
+  current_directory = curdir;
 }
 void FileTree::print() {
   for (int i = 0; i < tree.size(); ++i) {

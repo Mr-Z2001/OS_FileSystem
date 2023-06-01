@@ -5,8 +5,10 @@
 #ifndef FILESYSTEM_FILETREE_H
 #define FILESYSTEM_FILETREE_H
 #include "Disk/DiskManager.hpp"
+#include "Disk/DiskDefs.hpp"
 #include "Identity.h"
 #include "Node.h"
+
 #include <map>
 class FileTree {
 
@@ -53,6 +55,9 @@ public:
   void set_index();
 
   void print();
+
+  void syswrite(Disk::blockid_t bid, char *buf, size_t buflen);
+  void sysread(Disk::blockid_t bid, char *buf, size_t buflen);
 };
 
 #endif // FILESYSTEM_FILETREE_H
