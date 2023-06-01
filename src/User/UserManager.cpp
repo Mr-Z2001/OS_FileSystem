@@ -6,10 +6,10 @@
 #include "utils.hpp"
 
 #include <cassert>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <regex>
-#include <cstring>
 
 void UserManager::loadUserMap() {
   Disk::blockid_t bid = 0;
@@ -95,8 +95,8 @@ void UserManager::loadUserGroupMap() {
 }
 
 UserManager::UserManager() {
-  loadUserMap();
-  loadUserGroupMap();
+  // loadUserMap();
+  // loadUserGroupMap();
 }
 
 UserManager::~UserManager() {

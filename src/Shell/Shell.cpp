@@ -17,8 +17,10 @@ Shell::Shell(char *username, char *hostname, char *cwd) {
   this->hostname = hostname;
   strncpy(this->cwd, cwd, 128);
   this->prompt = (char *)malloc(1024);
-  this->userManager = new UserManager;
+  // this->userManager = new UserManager;
   sprintf(this->prompt, "%s@%s:%s$ ", this->username, this->hostname, this->cwd);
+  userManager->loadUserMap();
+  userManager->loadUserGroupMap();
 }
 
 Shell::~Shell() {

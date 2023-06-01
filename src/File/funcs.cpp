@@ -1,5 +1,6 @@
 #include "funcs.hpp"
 #include "DiskDefs.hpp"
+#include "DiskManager.hpp"
 #include "UserFunctions.hpp"
 #include "utils.hpp"
 
@@ -10,9 +11,10 @@
 #include <string>
 
 void save(std::vector<std::vector<int>> *tree, std::map<int, Node *> *info) {
+
   Disk::blockid_t tree_bid = 3;
   Disk::blockid_t nodeInfo_bid = 2;
-  char *tree_buf, *nodeInfo_buf;
+  char tree_buf[Disk::PAGE_SIZ] = {0}, nodeInfo_buf[Disk::PAGE_SIZ] = {0};
   size_t buflen = Disk::PAGE_SIZ;
 
   // save tree info.
@@ -63,7 +65,7 @@ void save(std::vector<std::vector<int>> *tree, std::map<int, Node *> *info) {
       strcat(nodeInfo_buf, (std::to_string(i) + ",").c_str());
     // link
     sz = t->link.size();
-    strcat(nodeInfo_buf, (std::to_string(sz) + ",").c_str());
+    strcat(nodeInfo_buf, (std::to_string(sz)).c_str());
     for (auto i : t->link)
       strcat(nodeInfo_buf, ("," + std::to_string(i)).c_str());
     strcat(nodeInfo_buf, "\n");
@@ -133,12 +135,18 @@ void save(std::vector<std::vector<int>> *tree, std::map<int, Node *> *info) {
   // nodeInfof.close();
 }
 void load(std::vector<std::vector<int>> *tree, std::map<int, Node *> *node_info) {
+
+  Disk::DiskManager *dmgr = new Disk::DiskManager("hdd.bin");
+
   Disk::blockid_t tree_bid = 3;
   Disk::blockid_t nodeInfo_bid = 2;
-  char *tree_buf, *nodeInfo_buf;
+  char tree_buf[Disk::PAGE_SIZ] = {0}, nodeInfo_buf[Disk::PAGE_SIZ] = {0};
   size_t buflen = Disk::PAGE_SIZ;
-  ft->sysread(tree_bid, tree_buf, buflen);
-  ft->sysread(nodeInfo_bid, nodeInfo_buf, buflen);
+  dmgr->blk_read(tree_bid, tree_buf, buflen);
+  dmgr->blk_read(nodeInfo_bid, nodeInfo_buf, buflen);
+
+  // ft->sysread(tree_bid, tree_buf, buflen);
+  // ft->sysread(nodeInfo_bid, nodeInfo_buf, buflen);
 
   // tree
   int node_cnt, edge_cnt;
@@ -192,6 +200,8 @@ void load(std::vector<std::vector<int>> *tree, std::map<int, Node *> *node_info)
       t->link.insert(strToInt(vs[i++]));
     node_info->insert(std::make_pair(node_id, t));
   }
+
+  delete dmgr;
 
   // std::ifstream treef, nodeInfof;
   // std::stringstream ss;

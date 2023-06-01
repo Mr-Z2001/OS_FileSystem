@@ -1,6 +1,7 @@
 #include "utils.hpp"
 #include <cstdint>
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 #include <stdio.h>
 #include <string.h>
@@ -85,3 +86,5 @@ std::vector<std::string> split(std::string str, char delim) {
     tokens.push_back(token);
   return tokens;
 }
+
+std::vector<std::string> split(char *str, char delim) { return split(std::string(str), delim); }

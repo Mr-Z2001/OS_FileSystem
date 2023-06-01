@@ -21,7 +21,7 @@ Disk::DiskManager::DiskManager(const char *path) : disk_(open(path, O_RDONLY)) {
 
 Disk::DiskManager::DiskManager(const char *path, Vec<blockid_t> &usedblks) : disk_(open(path, O_RDONLY)) {
   bcm_ = new BlockChainManager();
-  for (auto &&bid: usedblks) {
+  for (auto &&bid : usedblks) {
     bcm_->mark(bid);
   }
 
@@ -56,7 +56,7 @@ Disk::DiskManager::~DiskManager() {
     rcds_[i] = nullptr;
   }
 
-  for (auto &&p: pagemap_) {
+  for (auto &&p : pagemap_) {
     delete p.second;
     p.second = nullptr;
   }
@@ -69,18 +69,18 @@ auto Disk::DiskManager::blk_alloc(size_t nm) -> Disk::Vec<Disk::blockid_t> { ret
 auto Disk::DiskManager::blk_release(Disk::Vec<Disk::blockid_t> &bids) -> void { bcm_->release(bids); }
 
 auto Disk::DiskManager::blk_write(blockid_t bid, void *buf, size_t len) -> void {
-  assert(bid && bid < BLOK_NM);
+  assert(bid >= 0 && bid < BLOK_NM);
   blks_[bid]->blk_write(buf, len);
 }
 
 auto Disk::DiskManager::blk_read(blockid_t bid, void *buf, size_t len) -> void {
-  assert(bid && bid < BLOK_NM);
+  assert(bid >= 0 && bid < BLOK_NM);
   blks_[bid]->blk_read(buf, len);
 }
 
 auto Disk::DiskManager::pg_alloc(Vec<blockid_t> &nm, rwxinfo plv) -> pageid_t {
   static size_t unique_id_alloc = 0;
-  page_t pg = new Page(unique_id_alloc ++, plv);
+  page_t pg = new Page(unique_id_alloc++, plv);
   pg->bids.insert(pg->bids.end(), nm.begin(), nm.end());
   pagemap_[pg->pgid_] = pg;
   return pg->pgid_;
@@ -116,8 +116,8 @@ auto Disk::DiskManager::pg_seek(pageid_t pgid, size_t offset, mode_t mod) -> voi
 
 auto Disk::DiskManager::pg_flush(pageid_t pgid) -> void {
   page_t pg = pagemap_.at(pgid);
-  
-  for (auto &&bid: pg->bids) {
+
+  for (auto &&bid : pg->bids) {
     auto &&p = hashmap_.find(bid);
     if (p != hashmap_.end()) {
       frms_[p->second]->frm_flush();
@@ -216,9 +216,7 @@ auto Disk::DiskManager::frm_alloc(blockid_t bid) -> frameid_t {
   return fid;
 }
 
-auto Disk::DiskManager::frm_release(frameid_t fid) -> void {
-
-}
+auto Disk::DiskManager::frm_release(frameid_t fid) -> void {}
 
 auto Disk::DiskManager::frm_write(frameid_t fid, size_t offset, void *buf, size_t len) -> size_t {
   rcds_[fid]->access();
