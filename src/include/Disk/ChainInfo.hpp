@@ -8,8 +8,8 @@ static_assert(sizeof(size_t) == 8);
 
 /**
  * @brief index
- *
- *  xxxx'xxxx'...xxxx'xxxx -> 64 groups status
+ *  
+ *  xxxx'xxxx'...'xxxx'xxxx -> 64 groups status
  *  if groups in block i full
  *      the groups[i] = true;
  *  group is full => status = -1

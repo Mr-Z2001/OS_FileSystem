@@ -28,6 +28,7 @@ void cp(Identity *identity, bool force, bool link, bool noclobber, bool update, 
         std::vector<std::string> source, std::string destination);
 void chmod(Identity *identity, bool recursive, int mode, std::vector<std::string> filename);
 void help();
+void mkfs(Identity* id);
 
 extern FileTree *ft;
 

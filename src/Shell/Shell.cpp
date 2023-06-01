@@ -394,6 +394,9 @@ void Shell::start() {
     case 15: // help
       help();
       break;
+    case 16: // mkfs
+      mkfs(id);
+      break;
     default: // unknown-command
       std::cerr << "Unknown command: " << command << std::endl;
       break;

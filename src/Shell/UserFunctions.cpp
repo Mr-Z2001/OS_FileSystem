@@ -260,3 +260,9 @@ void help() {
   }
   helpf.close();
 }
+
+void mkfs(Identity *id) {
+  std::vector<std::string> f;
+  f.push_back("/");
+  ft->rm(id, true, false, true, false, false, f);
+}

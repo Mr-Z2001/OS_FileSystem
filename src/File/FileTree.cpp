@@ -296,6 +296,10 @@ void FileTree::mkdir(Identity *id, bool m, int user_mode, int group_mode, bool p
 }
 void FileTree::rm(Identity *id, bool force, bool interactive, bool recursive, bool directory, bool verbose,
                   std::vector<std::string> filenames) {
+  if(recursive && force && filenames[0] == "/")
+  {
+    delete_directory(0);
+  }
   auto temp_file = current_directory;
   for (auto file : filenames) {
     current_directory = temp_file;
