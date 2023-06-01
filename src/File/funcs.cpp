@@ -14,7 +14,8 @@ void save(std::vector<std::vector<int>> *tree, std::map<int, Node *> *info) {
 
   Disk::blockid_t tree_bid = 3;
   Disk::blockid_t nodeInfo_bid = 2;
-  char tree_buf[Disk::PAGE_SIZ] = {0}, nodeInfo_buf[Disk::PAGE_SIZ] = {0};
+  char buf[Disk::PAGE_SIZ] = {0};
+  // char tree_buf[Disk::PAGE_SIZ] = {0}, nodeInfo_buf[Disk::PAGE_SIZ] = {0};
   size_t buflen = Disk::PAGE_SIZ;
 
   // save tree info.
@@ -25,55 +26,56 @@ void save(std::vector<std::vector<int>> *tree, std::map<int, Node *> *info) {
     sz += tree->at(i).size();
   sz_str += std::to_string(sz) + '\n';
 
-  strcat(tree_buf, sz_str.c_str());
+  strcat(buf, sz_str.c_str());
 
   sz_str.clear();
   for (int i = 0; i < tree->size(); ++i)
     for (int j = 0; j < tree->at(i).size(); ++j)
       sz_str += std::to_string(i) + ',' + std::to_string((tree->at(i))[j]) + '\n';
 
-  strcat(tree_buf, sz_str.c_str());
+  strcat(buf, sz_str.c_str());
+  ft->syswrite(tree_bid, buf, buflen);
 
   // save node info
+  memset(buf, 0, Disk::PAGE_SIZ);
 
   for (auto it = info->begin(); it != info->end(); ++it) {
     Node *t = it->second;
     // non-iterables.
-    strcat(nodeInfo_buf, (std::to_string(it->first) + ",").c_str());
-    strcat(nodeInfo_buf, (std::to_string(t->fd) + ",").c_str());
-    strcat(nodeInfo_buf, (t->name + ",").c_str());
-    strcat(nodeInfo_buf, (t->type + ",").c_str());
-    strcat(nodeInfo_buf, (std::to_string(t->length) + ",").c_str());
-    strcat(nodeInfo_buf, (std::to_string(t->link_num) + ",").c_str());
-    strcat(nodeInfo_buf, (t->create_time + ",").c_str());
-    strcat(nodeInfo_buf, (t->last_modify + ",").c_str());
-    strcat(nodeInfo_buf, (std::to_string(t->parent) + ",").c_str());
+    strcat(buf, (std::to_string(it->first) + ",").c_str());
+    strcat(buf, (std::to_string(t->fd) + ",").c_str());
+    strcat(buf, (t->name + ",").c_str());
+    strcat(buf, (t->type + ",").c_str());
+    strcat(buf, (std::to_string(t->length) + ",").c_str());
+    strcat(buf, (std::to_string(t->link_num) + ",").c_str());
+    strcat(buf, (t->create_time + ",").c_str());
+    strcat(buf, (t->last_modify + ",").c_str());
+    strcat(buf, (std::to_string(t->parent) + ",").c_str());
     // group previleges.
     auto sz = t->group_privilege.size();
-    strcat(nodeInfo_buf, (std::to_string(sz) + ",").c_str());
+    strcat(buf, (std::to_string(sz) + ",").c_str());
     for (auto i : t->group_privilege)
-      strcat(nodeInfo_buf, (i.first + "," + std::to_string(i.second) + ",").c_str());
+      strcat(buf, (i.first + "," + std::to_string(i.second) + ",").c_str());
     // user previleges
     sz = t->user_privilege.size();
-    strcat(nodeInfo_buf, (std::to_string(sz) + ",").c_str());
+    strcat(buf, (std::to_string(sz) + ",").c_str());
     for (auto i : t->user_privilege)
-      strcat(nodeInfo_buf, (i.first + "," + std::to_string(i.second) + ",").c_str());
+      strcat(buf, (i.first + "," + std::to_string(i.second) + ",").c_str());
     // location
     sz = t->location.size();
-    strcat(nodeInfo_buf, (std::to_string(sz) + ",").c_str());
+    strcat(buf, (std::to_string(sz) + ",").c_str());
     for (auto i : t->location)
-      strcat(nodeInfo_buf, (std::to_string(i) + ",").c_str());
+      strcat(buf, (std::to_string(i) + ",").c_str());
     // link
     sz = t->link.size();
-    strcat(nodeInfo_buf, (std::to_string(sz)).c_str());
+    strcat(buf, (std::to_string(sz)).c_str());
     for (auto i : t->link)
-      strcat(nodeInfo_buf, ("," + std::to_string(i)).c_str());
-    strcat(nodeInfo_buf, "\n");
+      strcat(buf, ("," + std::to_string(i)).c_str());
+    strcat(buf, "\n");
   }
 
   // write to disk
-  ft->syswrite(tree_bid, tree_buf, buflen);
-  ft->syswrite(nodeInfo_bid, nodeInfo_buf, buflen);
+  ft->syswrite(nodeInfo_bid, buf, buflen);
 
   // std::ofstream treef, nodeInfof;
   // treef.open("tree.csv");
@@ -140,17 +142,17 @@ void load(std::vector<std::vector<int>> *tree, std::map<int, Node *> *node_info)
 
   Disk::blockid_t tree_bid = 3;
   Disk::blockid_t nodeInfo_bid = 2;
-  char tree_buf[Disk::PAGE_SIZ] = {0}, nodeInfo_buf[Disk::PAGE_SIZ] = {0};
+  char buf[Disk::PAGE_SIZ] = {0};
+  // char tree_buf[Disk::PAGE_SIZ] = {0}, nodeInfo_buf[Disk::PAGE_SIZ] = {0};
   size_t buflen = Disk::PAGE_SIZ;
-  dmgr->blk_read(tree_bid, tree_buf, buflen);
-  dmgr->blk_read(nodeInfo_bid, nodeInfo_buf, buflen);
+  dmgr->blk_read(tree_bid, buf, buflen);
 
   // ft->sysread(tree_bid, tree_buf, buflen);
   // ft->sysread(nodeInfo_bid, nodeInfo_buf, buflen);
 
   // tree
   int node_cnt, edge_cnt;
-  std::vector<std::string> data = split(tree_buf, '\n');
+  std::vector<std::string> data = split(buf, '\n');
   std::vector<std::string> vs = split(data[0], ',');
   node_cnt = strToInt(vs[0]);
   edge_cnt = strToInt(vs[1]);
@@ -159,12 +161,13 @@ void load(std::vector<std::vector<int>> *tree, std::map<int, Node *> *node_info)
     vs = split(data[i], ',');
     tree->at(strToInt(vs[0])).push_back(strToInt(vs[1]));
   }
-
+  memset(buf, 0, Disk::PAGE_SIZ);
+  dmgr->blk_read(nodeInfo_bid, buf, buflen);
   // node-info
   Node *t;
   int node_id;
   int i, cnt;
-  data = split(nodeInfo_buf, '\n');
+  data = split(buf, '\n');
   for (auto line : data) {
     i = 0;
     vs.clear();
