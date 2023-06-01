@@ -252,12 +252,11 @@ void chmod(Identity *id, bool recursive, int mode, std::vector<std::string> file
 
 void help() {
   std::ifstream helpf;
-  helpf.open("help.txt");
+  helpf.open("commands.txt");
 
   std::string line;
   while (getline(helpf, line)) {
     std::cout << line << std::endl;
   }
-
   helpf.close();
 }
