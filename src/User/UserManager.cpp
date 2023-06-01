@@ -9,12 +9,11 @@
 #include <fstream>
 #include <iostream>
 #include <regex>
-
-extern FileTree *ft;
+#include <cstring>
 
 void UserManager::loadUserMap() {
   Disk::blockid_t bid = 0;
-  char *buf;
+  char buf[Disk::PAGE_SIZ] = {0};
   size_t buflen = Disk::PAGE_SIZ;
   ft->sysread(bid, buf, buflen);
   std::string str(buf);
@@ -54,7 +53,7 @@ void UserManager::loadUserMap() {
 void UserManager::loadUserGroupMap() {
 
   Disk::blockid_t bid = 1;
-  char *buf;
+  char buf[Disk::PAGE_SIZ] = {0};
   size_t buflen = Disk::PAGE_SIZ;
   ft->sysread(bid, buf, buflen);
   std::string str(buf);
@@ -99,6 +98,7 @@ UserManager::UserManager() {
   loadUserMap();
   loadUserGroupMap();
 }
+
 UserManager::~UserManager() {
   for (auto i : userMap)
     delete i.second;

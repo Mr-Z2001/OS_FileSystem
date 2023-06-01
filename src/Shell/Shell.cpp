@@ -11,8 +11,6 @@
 #include "UserFunctions.hpp"
 #include "utils.hpp"
 
-extern FileTree *ft;
-
 Shell::Shell(char *username, char *hostname, char *cwd) {
   init_ufs();
   this->username = username;
@@ -50,7 +48,7 @@ UserManager *Shell::getUserManager() {
 
 void Shell::loadCommandMap() {
   Disk::blockid_t bid = 4;
-  char *buf;
+  char buf[Disk::PAGE_SIZ] = {0};
   size_t buflen = Disk::PAGE_SIZ;
   ft->sysread(bid, buf, buflen);
   std::string s(buf);

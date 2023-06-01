@@ -7,8 +7,6 @@
 #include <string>
 #include <vector>
 
-static FileTree *ft = nullptr;
-
 void init_ufs();
 
 void create(Identity *identity, std::string filename); // deleted previleges, due to all those are 111.
@@ -30,5 +28,7 @@ void cp(Identity *identity, bool force, bool link, bool noclobber, bool update, 
         std::vector<std::string> source, std::string destination);
 void chmod(Identity *identity, bool recursive, int mode, std::vector<std::string> filename);
 void help();
+
+extern FileTree *ft;
 
 #endif

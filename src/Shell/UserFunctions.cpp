@@ -8,6 +8,8 @@
 #include <string.h>
 #include <vector>
 
+FileTree *ft = nullptr;
+
 static void release_ufs() {
   save(&(ft->tree), &(ft->project));
   delete ft;
