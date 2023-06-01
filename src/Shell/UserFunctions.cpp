@@ -3,6 +3,7 @@
 #include "funcs.hpp"
 
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <string.h>
 #include <vector>
@@ -157,7 +158,7 @@ void cd(Identity *id, std::string directory, char *newDirectory) {
 
 void ls(Identity *id, bool all, bool almost_all, bool _directory, bool human_readable, bool inode, bool list,
         bool recursive, bool sortBySize, bool sortByTime, std::string directory) {
-  
+
   ft->ls(directory);
   // std::string gn = id->groupname;
   // std::string un = id->username;
@@ -247,4 +248,16 @@ void chmod(Identity *id, bool recursive, int mode, std::vector<std::string> file
   //       std::cout << "Permission denied" << std::endl;
   //   }
   // }
+}
+
+void help() {
+  std::ifstream helpf;
+  helpf.open("help.txt");
+
+  std::string line;
+  while (getline(helpf, line)) {
+    std::cout << line << std::endl;
+  }
+
+  helpf.close();
 }

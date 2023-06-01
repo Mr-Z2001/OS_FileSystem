@@ -20,7 +20,6 @@ write [option] <filename> [text]
 options:
   -a, --append
       append text to the end of file
-
   -o  overwrite the text.
 
 close <filename>

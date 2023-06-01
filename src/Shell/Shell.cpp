@@ -382,6 +382,9 @@ void Shell::start() {
       chmod(id, R, mod, filenames);
       break;
     }
+    case 15: // help
+      help();
+      break;
     default: // unknown-command
       std::cerr << "Unknown command: " << command << std::endl;
       break;
